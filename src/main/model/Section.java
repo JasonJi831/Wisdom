@@ -11,7 +11,7 @@ public class Section {
     private int seatsRemaining;
     private ClassTime classTime;
 
-    // EFFECTS: constructs a section with the given section number, zero total seats capacity and remaning seats and
+    // EFFECTS: constructs a section with the given section number, zero total seats capacity and remaining seats and
     // the courseTime.
     public Section(int sectionNumber) {
         this.sectionNumber = sectionNumber;
@@ -53,11 +53,6 @@ public class Section {
 
     }
 
-    // MODIFIES: this
-    // EFFECTS: set this section's class time to a given time.
-    public void setCourseTime(ClassTime classTime) {
-        this.classTime = classTime;
-    }
 
 
     // EFFECTS: return the section number of the course section.
@@ -79,11 +74,6 @@ public class Section {
 
     }
 
-    // EFFECTS: returns the course time of the section.
-    public ClassTime getCourseTime() {
-        return this.classTime;
-
-    }
 
 
 }

@@ -86,12 +86,10 @@ public class Student {
     public Boolean dropOneCourseSection(String subjectName, int courseNumber, int section) {
         if (this.registeredList.isEmpty() == false) {
             for (Course c : this.registeredList) {
-                if (c.getSubject() == subjectName && c.getCourseNumber() == courseNumber
+                while (c.getSubject() == subjectName && c.getCourseNumber() == courseNumber
                         && c.whetherContainsSection(section)) {
                     c.removeSection(section);
                     return true;
-                } else {
-                    return false;
                 }
             }
             return false;
@@ -107,12 +105,10 @@ public class Student {
     public Boolean removeCourseSectionFromWaitList(String subjectName, int courseNumber, int section) {
         if (this.waitList.isEmpty() == false) {
             for (Course c : this.waitList) {
-                if (c.getSubject() == subjectName && c.getCourseNumber() == courseNumber
+                while (c.getSubject() == subjectName && c.getCourseNumber() == courseNumber
                         && c.whetherContainsSection(section)) {
                     c.removeSection(section);
                     return true;
-                } else {
-                    return false;
                 }
             }
             return false;

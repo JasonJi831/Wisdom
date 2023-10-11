@@ -43,9 +43,11 @@ public class StudentTest {
 
     }
 
+
     @Test
     void testAddCourseToWorkListByOnce() {
-        testStudent.addCourseToWorkList(myWorkList1);
+        assertTrue(testStudent.addCourseToWorkList(myWorkList1));
+        assertFalse(testStudent.addCourseToWorkList(myWorkList1));
         List<WorkList> testWorkList = testStudent.getWorkList();
         assertEquals(1, testWorkList.size());
         assertEquals(myWorkList1, testWorkList.get(0));
@@ -55,8 +57,8 @@ public class StudentTest {
 
     @Test
     void testAddCourseToWorkListByMultiTimes() {
-        testStudent.addCourseToWorkList(myWorkList1);
-        testStudent.addCourseToWorkList(myWorkList2);
+        assertTrue(testStudent.addCourseToWorkList(myWorkList1));
+        assertTrue(testStudent.addCourseToWorkList(myWorkList2));
         List<WorkList> testWorkList = testStudent.getWorkList();
         assertEquals(2, testWorkList.size());
         assertEquals(myWorkList1, testWorkList.get(0));
@@ -66,7 +68,8 @@ public class StudentTest {
 
     @Test
     void testRegisterCourseByOnce() {
-        testStudent.registerCourse(testCourse1);
+        assertTrue(testStudent.registerCourse(testCourse1));
+        assertFalse(testStudent.registerCourse(testCourse1));
         List<Course> testRegisteredList = testStudent.getRegistereddList();
         assertEquals(1, testRegisteredList.size());
         assertEquals(testCourse1, testRegisteredList.get(0));
@@ -77,8 +80,8 @@ public class StudentTest {
 
     @Test
     void testRegisterCourseByMultiTimes() {
-        testStudent.registerCourse(testCourse1);
-        testStudent.registerCourse(testCourse2);
+        assertTrue(testStudent.registerCourse(testCourse1));
+        assertTrue(testStudent.registerCourse(testCourse2));
         List<Course> testRegisteredList = testStudent.getRegistereddList();
         assertEquals(2, testRegisteredList.size());
         assertEquals(testCourse1, testRegisteredList.get(0));
@@ -88,7 +91,8 @@ public class StudentTest {
 
     @Test
     void testAddCourseToWaitListByOnce() {
-        testStudent.addCourseToWaitList(testCourse1);
+        assertTrue(testStudent.addCourseToWaitList(testCourse1));
+        assertFalse(testStudent.addCourseToWaitList(testCourse1));
         List<Course> testWaitList = testStudent.getWaitList();
         assertEquals(1, testWaitList.size());
         assertEquals(testCourse1, testWaitList.get(0));
@@ -97,8 +101,8 @@ public class StudentTest {
 
     @Test
     void testAddCourseToWaitListMultiTimes() {
-        testStudent.addCourseToWaitList(testCourse1);
-        testStudent.addCourseToWaitList(testCourse2);
+        assertTrue(testStudent.addCourseToWaitList(testCourse1));
+        assertTrue(testStudent.addCourseToWaitList(testCourse2));
         List<Course> testWaitList = testStudent.getWaitList();
         assertEquals(2, testWaitList.size());
         assertEquals(testCourse1, testWaitList.get(0));
