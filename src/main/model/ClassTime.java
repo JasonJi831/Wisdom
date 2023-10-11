@@ -23,11 +23,10 @@ public class ClassTime {
     // EFFECTS: returns true if the course conflicts with the given course, meaning that there is at least one overlap
     // between the start and end times of the courses and the given course; otherwise, return false.
     public Boolean ifConflict(ClassTime classTime) {
-        if (day == classTime.getDay()) {
+        while (day == classTime.getDay()) {
             return this.startingTime <= classTime.getStartingTime() && classTime.getStartingTime() < this.endingTime;
-        } else {
-            return false;
         }
+        return false;
     }
 
 

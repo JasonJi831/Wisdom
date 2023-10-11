@@ -70,7 +70,7 @@ public class Student {
     public Boolean deleteOneWorkList(String name) {
         if (this.workLists.isEmpty() == false) {
             for (WorkList wl : this.workLists) {
-                if (wl.getName() == name) {
+                while (wl.getName() == name) {
                     this.workLists.remove(wl);
                     return true;
                 }
