@@ -24,7 +24,11 @@ public class ClassTime {
     // between the start and end times of the courses and the given course; otherwise, return false.
     public Boolean ifConflict(ClassTime classTime) {
         if (day == classTime.getDay()) {
-            return startingTime <= classTime.getStartingTime() && classTime.getStartingTime() < endingTime;
+            if (startingTime <= classTime.getStartingTime()) {
+                return classTime.getStartingTime() < endingTime;
+            } else {
+                return classTime.endingTime > startingTime;
+            }
         }
         return false;
     }

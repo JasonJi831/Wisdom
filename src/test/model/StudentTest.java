@@ -127,6 +127,8 @@ public class StudentTest {
         testStudent.addCourseToWorkList(myWorkList2);
         testStudent.addCourseToWorkList(myWorkList1);
         assertTrue(testStudent.deleteOneWorkList(myWorkList1.getName()));
+        assertFalse(testStudent.deleteOneWorkList("abc"));
+
         List<WorkList> testWorkList2 = testStudent.getWorkList();
         assertEquals(1, testWorkList2.size());
         assertEquals(myWorkList2, testWorkList2.get(0));

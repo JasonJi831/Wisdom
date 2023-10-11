@@ -35,14 +35,35 @@ public class ClassTimeTest {
         assertFalse(testClassTime1.ifConflict(testClassTime2));  // test for different day --> false
         assertTrue(testClassTime1.ifConflict(testClassTime1));   // test for a same day and a same time --> true
         testClassTime2.setDay("Mon");
+
+        testClassTime2.setTime(1000,1101);
+        assertTrue(testClassTime1.ifConflict(testClassTime2));
+
+        // test for two consecutive courses --> false
         testClassTime2.setTime(1300, 1500);
-        assertFalse(testClassTime1.ifConflict(testClassTime2));  // test for two consecutive courses --> false
+        assertFalse(testClassTime1.ifConflict(testClassTime2));
+
+        testClassTime2.setTime(1000,1100);
+        assertFalse(testClassTime1.ifConflict(testClassTime2));
+
+        // test for two discrete courses --> false
         testClassTime2.setTime(1301, 1500);
-        assertFalse(testClassTime1.ifConflict(testClassTime2));  // test for two discrete courses --> false
+        assertFalse(testClassTime1.ifConflict(testClassTime2));
+
+        testClassTime2.setTime(800, 1000);
+        assertFalse(testClassTime1.ifConflict(testClassTime2));
+
+        // test for overlapping only one minute --> true
         testClassTime2.setTime(1259, 1559);
-        assertTrue(testClassTime1.ifConflict(testClassTime2));   // test for overlapping only one minute --> true
+        assertTrue(testClassTime1.ifConflict(testClassTime2));
+
+        testClassTime2.setTime(1001, 1101);
+        assertTrue(testClassTime1.ifConflict(testClassTime2));
+
+        // test for overlapping 30 minutes --> true
         testClassTime2.setTime(1130, 1300);
-        assertTrue(testClassTime1.ifConflict(testClassTime2));   // test for overlapping 30 minutes --> true
+        assertTrue(testClassTime1.ifConflict(testClassTime2));
+
 
 
 
