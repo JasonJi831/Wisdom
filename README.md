@@ -13,7 +13,7 @@ streamlining the course guidance process.
 
 ### *Who will use it?*
 
-This application will primarily serve our university, specifically for the course coordinators. It may also
+This application will primarily serve our university, specifically for the students. It may also
 provide essential tools for university staff and faculty.
 
 
@@ -27,11 +27,8 @@ save time in course scheduling, making their work smoother and more efficient.
 
 
 ### User Stories:
-- As a user, I want to add a student to a coordinator's student list. (I can add as many students as I want!)
-  --*addStudent()*
-- As a user, I want to view all students handled by a coordinator.--*getAllStudents()*
-- As a user, I want to add a course to the course work list for a specific student.-*addCourseToWorkList()*
-- As a user, I want to add a course to the course wait list for a specific student.-*addCourseToWaitList()*
+- As a user, I want to add a course to the course work list.-*addCourseToWorkList()*
+- As a user, I want to add a course to the course wait list.-*addCourseToWaitList()*
 - As a user, I want to register a course.--*registerCourse()*
 - As a user, I want to check if there are available seats in a course.--*ifSeatAvailable()*
 
