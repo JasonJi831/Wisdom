@@ -136,13 +136,14 @@ public class Student {
         if (this.workList.isEmpty() == false) {
             for (Course c : this.workList) {
                 if (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
-                    return c.removeSection(section);
+                    c.removeSection(section);
+                    return true;
                 }
             }
-
-
+            return false;
+        } else {
+            return false;
         }
-        return false;
     }
 
     // REQUIRES: course number > 0, section > 0
@@ -152,7 +153,7 @@ public class Student {
     public Boolean dropOneCourseSection(String subjectName, int courseNumber, int section) {
         if (this.registeredList.isEmpty() == false) {
             for (Course c : this.registeredList) {
-                while (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
+                if (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
                     c.removeSection(section);
                     return true;
                 }

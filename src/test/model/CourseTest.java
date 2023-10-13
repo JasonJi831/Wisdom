@@ -64,6 +64,7 @@ public class CourseTest {
 
     @Test
     void testRemoveSectionByOnce() {
+        assertFalse(testCourse.removeSection(101));
         testCourse.addSection(101);
         assertFalse(testCourse.removeSection(102));
         assertTrue(testCourse.removeSection(101));
