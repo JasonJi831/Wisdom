@@ -62,11 +62,9 @@ public class StudentTest {
 
     @Test
     void testAddANewSectionToWorkListByOnce() {
-
         testStudent.addANewSectionToWorkList("CPSC", 210, 101);
         List<Course> testWorkList1 = testStudent.getWorkList();
-        List<Integer> testSectionList1 = testWorkList1.get(0).getAllSections();
-        assertEquals(0, testSectionList1.size());
+        assertEquals(0, testWorkList1.size());
 
 
         testStudent.addACourseToWorkList("CPSC", 210);
@@ -75,14 +73,6 @@ public class StudentTest {
         List<Integer> testSectionList = testWorkList.get(0).getAllSections();
         assertEquals(1, testSectionList.size());
         assertEquals(101, testSectionList.get(0));
-
-
-
-
-
-
-
-
 
     }
 
@@ -151,7 +141,9 @@ public class StudentTest {
 
     @Test
     void testShowALlCourseInRegisteredList() {
+
         testStudent.registerCourse("CPSC", 210, 101);
+
         List<String> testResult = testStudent.showALlCourseInRegisteredList();
         assertEquals(1, testResult.size());
         assertEquals("CPSC210", testResult.get(0));
@@ -166,6 +158,12 @@ public class StudentTest {
 
     @Test
     void testShowAllSectionOfThisCourseInWorkList() {
+
+        testStudent.addACourseToWorkList("ECON", 345);
+        List<Integer> integerList = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertNull(integerList);
+
         testStudent.addACourseToWorkList("CPSC", 210);
         List<Integer> allSections = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
                 210);
@@ -178,12 +176,18 @@ public class StudentTest {
         assertEquals(101, allSection1.get(0));
 
 
-
     }
 
 
     @Test
     void testShowAllSectionOfThisCourseInRegisteredList() {
+
+        testStudent.registerCourse("ECON", 345, 101);
+        List<Integer> integerList = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
+                210);
+        assertNull(integerList);
+
+
         testStudent.registerCourse("CPSC", 210, 101);
         List<Integer> allSections = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
                 210);
@@ -197,6 +201,7 @@ public class StudentTest {
         assertFalse(testStudent.repetitiveCourseInWorkList("CPSC", 210));
         testStudent.addACourseToWorkList("CPSC", 210);
         assertTrue(testStudent.repetitiveCourseInWorkList("CPSC", 210));
+        assertFalse(testStudent.repetitiveCourseInWorkList("ECON", 345));
 
     }
 
@@ -205,6 +210,8 @@ public class StudentTest {
         assertFalse(testStudent.repetitiveCourseInRegisteredList("CPSC", 210));
         testStudent.registerCourse("CPSC", 210, 101);
         assertTrue(testStudent.repetitiveCourseInRegisteredList("CPSC", 210));
+        assertFalse(testStudent.repetitiveCourseInRegisteredList("ECON", 210));
+
 
 
     }
@@ -215,6 +222,7 @@ public class StudentTest {
         testStudent.addACourseToWorkList("CPSC", 210);
         testStudent.addANewSectionToWorkList("CPSC", 210, 101);
         assertTrue(testStudent.deleteOneCourseSection("CPSC", 210, 101));
+        assertFalse(testStudent.deleteOneCourseSection("ECON",345, 101));
         List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
                 210);
         assertEquals(0, allSection1.size());
@@ -222,6 +230,20 @@ public class StudentTest {
 
 
     }
+
+    @Test
+    void testDropOneCourseSectionByOnce() {
+        assertFalse(testStudent.dropOneCourseSection("CPSC", 210,101));
+        testStudent.registerCourse("CPSC", 210 ,101);
+        assertFalse(testStudent.dropOneCourseSection("MATH", 200, 101));
+        assertTrue(testStudent.dropOneCourseSection("CPSC", 210, 101));
+        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
+                210);
+        assertEquals(0, allSection1.size());
+
+    }
+
+
 
     @Test
     void testDeleteOneCourseSectionByTwice() {
@@ -240,17 +262,6 @@ public class StudentTest {
                 210);
         assertEquals(0, allSection2.size());
 
-
-    }
-
-    @Test
-    void testDropOneCourseSectionByOnce() {
-        assertFalse(testStudent.dropOneCourseSection("CPSC", 210,101));
-        testStudent.registerCourse("CPSC", 210 ,101);
-        assertTrue(testStudent.dropOneCourseSection("CPSC", 210, 101));
-        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
-                210);
-        assertEquals(0, allSection1.size());
 
     }
 

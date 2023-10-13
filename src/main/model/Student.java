@@ -41,7 +41,6 @@ public class Student {
         for (Course c : workList) {
             if (c.sameCourse(courseSubject, courseNumber)) {
                 c.addSection(sectionNum);
-                return;
             }
         }
     }
@@ -81,7 +80,7 @@ public class Student {
     // subject and course number.
     public List<Integer> showAllSectionOfThisCourseInWorkList(String courseSubject, int courseNumber) {
         for (Course c : workList) {
-            if (c.sameCourse(courseSubject, courseNumber)) {
+            while (c.sameCourse(courseSubject, courseNumber)) {
                 return c.getAllSections();
             }
 
@@ -94,10 +93,9 @@ public class Student {
     // provided course subject and course number.
     public List<Integer> showAllSectionOfThisCourseInRegisteredList(String courseSubject, int courseNumber) {
         for (Course c : registeredList) {
-            if (c.sameCourse(courseSubject, courseNumber)) {
+            while (c.sameCourse(courseSubject, courseNumber)) {
                 return c.getAllSections();
             }
-
         }
         return null;
     }
