@@ -11,21 +11,13 @@ public class StudentTest {
     Student testStudent;
     Course testCourse1;
     Course testCourse2;
-    WorkList myWorkList1;
-    WorkList myWorkList2;
-    Section section1;
-    Section section2;
 
 
     @BeforeEach
     void runBefore() {
         testStudent = new Student("Jason", 12345678);
-        testCourse1 = new Course("CPSC", 210, "BSc");
-        testCourse2 = new Course("ECON", 345, "BA");
-        myWorkList1 = new WorkList("myWorkList1");
-        myWorkList2 = new WorkList("myWorkList2");
-        section1 = new Section(201);
-        section2 = new Section(203);
+        testCourse1 = new Course("CPSC", 210);
+        testCourse2 = new Course("ECON", 345);
 
     }
 
@@ -34,163 +26,237 @@ public class StudentTest {
     void testConstructor() {
         assertEquals("Jason", testStudent.getName());
         assertEquals(12345678, testStudent.getId());
-        List<WorkList> testWorkList = testStudent.getWorkList();
-        List<Course> testRegistedList = testStudent.getRegistereddList();
-        List<Course> testWaitList = testStudent.getWaitList();
+        List<Course> testWorkList = testStudent.getWorkList();
+        List<Course> testRegisteredList = testStudent.getRegistereddList();
         assertEquals(0, testWorkList.size());
-        assertEquals(0, testRegistedList.size());
-        assertEquals(0, testWaitList.size());
-
+        assertEquals(0, testRegisteredList.size());
     }
 
-
     @Test
-    void testAddCourseToWorkListByOnce() {
-        assertTrue(testStudent.addCourseToWorkList(myWorkList1));
-        assertFalse(testStudent.addCourseToWorkList(myWorkList1));
-        List<WorkList> testWorkList = testStudent.getWorkList();
+    void testAddACourseToWorkListByOnce() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        List<Course> testWorkList = testStudent.getWorkList();
         assertEquals(1, testWorkList.size());
-        assertEquals(myWorkList1, testWorkList.get(0));
+        Course testCourse = testWorkList.get(0);
+        assertEquals("CPSC", testCourse.getSubject());
+        assertEquals(210, testCourse.getCourseNumber());
+
+
+    }
+
+    @Test
+    void testAddACourseToWorkListByMultiTimes() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addACourseToWorkList("ECON", 345);
+        List<Course> testWorkList = testStudent.getWorkList();
+        Course testCourse1 = testWorkList.get(0);
+        Course testCourse2 = testWorkList.get(1);
+        assertEquals(2, testWorkList.size());
+        assertEquals("CPSC", testCourse1.getSubject());
+        assertEquals(210, testCourse1.getCourseNumber());
+        assertEquals("ECON", testCourse2.getSubject());
+        assertEquals(345, testCourse2.getCourseNumber());
+
+
+    }
+
+    @Test
+    void testAddANewSectionToWorkListByOnce() {
+
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        List<Course> testWorkList1 = testStudent.getWorkList();
+        List<Integer> testSectionList1 = testWorkList1.get(0).getAllSections();
+        assertEquals(0, testSectionList1.size());
+
+
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        List<Course> testWorkList = testStudent.getWorkList();
+        List<Integer> testSectionList = testWorkList.get(0).getAllSections();
+        assertEquals(1, testSectionList.size());
+        assertEquals(101, testSectionList.get(0));
+
+
+
+
+
+
+
+
 
     }
 
 
     @Test
-    void testAddCourseToWorkListByMultiTimes() {
-        assertTrue(testStudent.addCourseToWorkList(myWorkList1));
-        assertTrue(testStudent.addCourseToWorkList(myWorkList2));
-        List<WorkList> testWorkList = testStudent.getWorkList();
-        assertEquals(2, testWorkList.size());
-        assertEquals(myWorkList1, testWorkList.get(0));
-        assertEquals(myWorkList2, testWorkList.get(1));
+    void testAddANewSectionToWorkListByMultiTimes() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 102);
+        List<Course> testWorkList = testStudent.getWorkList();
+        List<Integer> testSectionList = testWorkList.get(0).getAllSections();
+        assertEquals(2, testSectionList.size());
+        assertEquals(101, testSectionList.get(0));
+        assertEquals(102, testSectionList.get(1));
 
     }
 
     @Test
     void testRegisterCourseByOnce() {
-        assertTrue(testStudent.registerCourse(testCourse1));
-        assertFalse(testStudent.registerCourse(testCourse1));
+        testStudent.registerCourse("CPSC", 210, 101);
         List<Course> testRegisteredList = testStudent.getRegistereddList();
-        assertEquals(1, testRegisteredList.size());
-        assertEquals(testCourse1, testRegisteredList.get(0));
+        Course testCourse = testRegisteredList.get(0);
+        assertEquals("CPSC", testCourse.getSubject());
+        assertEquals(210, testCourse.getCourseNumber());
+        List<Integer> testSectionList = testRegisteredList.get(0).getAllSections();
+        assertEquals(1, testSectionList.size());
+        assertEquals(101, testSectionList.get(0));
 
 
     }
-
 
     @Test
     void testRegisterCourseByMultiTimes() {
-        assertTrue(testStudent.registerCourse(testCourse1));
-        assertTrue(testStudent.registerCourse(testCourse2));
+        testStudent.registerCourse("CPSC", 210, 101);
+        testStudent.registerCourse("ECON", 345, 101);
         List<Course> testRegisteredList = testStudent.getRegistereddList();
-        assertEquals(2, testRegisteredList.size());
-        assertEquals(testCourse1, testRegisteredList.get(0));
-        assertEquals(testCourse2, testRegisteredList.get(1));
-
-    }
-
-    @Test
-    void testAddCourseToWaitListByOnce() {
-        assertTrue(testStudent.addCourseToWaitList(testCourse1));
-        assertFalse(testStudent.addCourseToWaitList(testCourse1));
-        List<Course> testWaitList = testStudent.getWaitList();
-        assertEquals(1, testWaitList.size());
-        assertEquals(testCourse1, testWaitList.get(0));
-
-    }
-
-    @Test
-    void testAddCourseToWaitListMultiTimes() {
-        assertTrue(testStudent.addCourseToWaitList(testCourse1));
-        assertTrue(testStudent.addCourseToWaitList(testCourse2));
-        List<Course> testWaitList = testStudent.getWaitList();
-        assertEquals(2, testWaitList.size());
-        assertEquals(testCourse1, testWaitList.get(0));
-        assertEquals(testCourse2, testWaitList.get(1));
-
-    }
-
-    @Test
-    void testDeleteOneWorkListEmptyCase() {
-        assertFalse(testStudent.deleteOneWorkList(myWorkList1.getName()));
-
-    }
-
-    @Test
-    void testDeleteOneWorkList() {
-        testStudent.addCourseToWorkList(myWorkList1);
-        assertTrue(testStudent.deleteOneWorkList(myWorkList1.getName()));
-        List<WorkList> testWorkList1 = testStudent.getWorkList();
-        assertEquals(0, testWorkList1.size());
-
-
-        testStudent.addCourseToWorkList(myWorkList2);
-        testStudent.addCourseToWorkList(myWorkList1);
-        assertTrue(testStudent.deleteOneWorkList(myWorkList1.getName()));
-        assertFalse(testStudent.deleteOneWorkList("abc"));
-
-        List<WorkList> testWorkList2 = testStudent.getWorkList();
-        assertEquals(1, testWorkList2.size());
-        assertEquals(myWorkList2, testWorkList2.get(0));
-
-    }
-
-    @Test
-    void testDropOneCourseSectionEmptyCase() {
-        assertFalse(testStudent.dropOneCourseSection("CPSC", 210, 201));
-
-    }
-
-    @Test
-    void testDropOneCourseSection() {
-
-        testStudent.registerCourse(testCourse1);
-        testCourse1.addSection(section1);
-        assertFalse(testStudent.dropOneCourseSection("MATH",210,201));
-        assertFalse(testStudent.dropOneCourseSection("CPSC",121,201));
-        assertFalse(testStudent.dropOneCourseSection("CPSC",210,203));
-        assertTrue(testStudent.dropOneCourseSection("CPSC", 210, 201));
-        assertFalse(testStudent.dropOneCourseSection("CPSC", 210, 201));
-        List<Course> testRegisteredList = testStudent.getRegistereddList();
-        Course course = testRegisteredList.get(0);
-        List<Section> testSectionList = course.getAllSections();
-        assertEquals(0, testSectionList.size());
-
-
-    }
-
-
-    @Test
-    void testRemoveCourseFromWaitListEmptyCase() {
-        assertFalse(testStudent.removeCourseSectionFromWaitList("ECON", 345, 201));
-
-    }
-
-    @Test
-    void testRemoveCourseFromWaitList() {
-        testStudent.addCourseToWaitList(testCourse2);
-        assertFalse(testStudent.removeCourseSectionFromWaitList("MATH",345,201));
-        assertFalse(testStudent.removeCourseSectionFromWaitList("ECON",101,201));
-        assertFalse(testStudent.removeCourseSectionFromWaitList("ECON",345,202));
-        testCourse2.addSection(section1);
-        testCourse2.addSection(section2);
-
-        assertTrue(testStudent.removeCourseSectionFromWaitList("ECON", 345, 201));
-        assertFalse(testStudent.removeCourseSectionFromWaitList("ECON", 345, 201));
-        List<Course> testWaitList = testStudent.getWaitList();
-        Course course1 = testWaitList.get(0);
-        List<Section> testSectionList1 = course1.getAllSections();
+        Course testCourse1 = testRegisteredList.get(0);
+        Course testCourse2 = testRegisteredList.get(1);
+        assertEquals("CPSC", testCourse1.getSubject());
+        assertEquals(210, testCourse1.getCourseNumber());
+        assertEquals("ECON", testCourse2.getSubject());
+        assertEquals(345, testCourse2.getCourseNumber());
+        List<Integer> testSectionList = testRegisteredList.get(0).getAllSections();
+        assertEquals(1, testSectionList.size());
+        assertEquals(101, testSectionList.get(0));
+        List<Integer> testSectionList1 = testRegisteredList.get(1).getAllSections();
         assertEquals(1, testSectionList1.size());
-        assertEquals(section2, testSectionList1.get(0));
+        assertEquals(101, testSectionList1.get(0));
+    }
 
-        assertTrue(testStudent.removeCourseSectionFromWaitList("ECON", 345, 203));
-        Course course2 = testWaitList.get(0);
-        List<Section> testSectionList2 = course2.getAllSections();
-        assertEquals(0, testSectionList2.size());
+
+    @Test
+    void testShowALlCourseInWorkList() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        List<String> testResult = testStudent.showALlCourseInWorkList();
+        assertEquals(1, testResult.size());
+        assertEquals("CPSC210", testResult.get(0));
+
+        testStudent.addACourseToWorkList("ECON", 345);
+        List<String> testResult1 = testStudent.showALlCourseInWorkList();
+        assertEquals(2, testResult1.size());
+        assertEquals("CPSC210", testResult1.get(0));
+        assertEquals("ECON345", testResult1.get(1));
+    }
+
+
+    @Test
+    void testShowALlCourseInRegisteredList() {
+        testStudent.registerCourse("CPSC", 210, 101);
+        List<String> testResult = testStudent.showALlCourseInRegisteredList();
+        assertEquals(1, testResult.size());
+        assertEquals("CPSC210", testResult.get(0));
+
+        testStudent.registerCourse("ECON", 345, 101);
+        List<String> testResult1 = testStudent.showALlCourseInRegisteredList();
+        assertEquals(2, testResult1.size());
+        assertEquals("CPSC210", testResult1.get(0));
+        assertEquals("ECON345", testResult1.get(1));
+    }
+
+
+    @Test
+    void testShowAllSectionOfThisCourseInWorkList() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        List<Integer> allSections = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertEquals(0, allSections.size());
+
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertEquals(1, allSection1.size());
+        assertEquals(101, allSection1.get(0));
 
 
 
     }
+
+
+    @Test
+    void testShowAllSectionOfThisCourseInRegisteredList() {
+        testStudent.registerCourse("CPSC", 210, 101);
+        List<Integer> allSections = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
+                210);
+        assertEquals(1, allSections.size());
+        assertEquals(101, allSections.get(0));
+
+    }
+
+    @Test
+    void testRepetitiveCourseInWorkList() {
+        assertFalse(testStudent.repetitiveCourseInWorkList("CPSC", 210));
+        testStudent.addACourseToWorkList("CPSC", 210);
+        assertTrue(testStudent.repetitiveCourseInWorkList("CPSC", 210));
+
+    }
+
+    @Test
+    void testRepetitiveCourseInRegisteredList() {
+        assertFalse(testStudent.repetitiveCourseInRegisteredList("CPSC", 210));
+        testStudent.registerCourse("CPSC", 210, 101);
+        assertTrue(testStudent.repetitiveCourseInRegisteredList("CPSC", 210));
+
+
+    }
+
+    @Test
+    void testDeleteOneCourseSectionByOnce() {
+        assertFalse(testStudent.deleteOneCourseSection("CPSC", 210,101));
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        assertTrue(testStudent.deleteOneCourseSection("CPSC", 210, 101));
+        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertEquals(0, allSection1.size());
+
+
+
+    }
+
+    @Test
+    void testDeleteOneCourseSectionByTwice() {
+        assertFalse(testStudent.deleteOneCourseSection("CPSC", 210,101));
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 102);
+        assertTrue(testStudent.deleteOneCourseSection("CPSC", 210, 101));
+        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertEquals(1, allSection1.size());
+        assertEquals(102, allSection1.get(0));
+
+        assertTrue(testStudent.deleteOneCourseSection("CPSC", 210, 102));
+        List<Integer> allSection2 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210);
+        assertEquals(0, allSection2.size());
+
+
+    }
+
+    @Test
+    void testDropOneCourseSectionByOnce() {
+        assertFalse(testStudent.dropOneCourseSection("CPSC", 210,101));
+        testStudent.registerCourse("CPSC", 210 ,101);
+        assertTrue(testStudent.dropOneCourseSection("CPSC", 210, 101));
+        List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
+                210);
+        assertEquals(0, allSection1.size());
+
+    }
+
+
+
+
 
 
 }

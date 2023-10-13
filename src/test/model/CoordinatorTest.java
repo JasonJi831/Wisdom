@@ -12,13 +12,16 @@ public class CoordinatorTest {
     private Student testStudent1;
     private Student testStudent2;
     private Student testStudent3;
+    private Student testStudent4;
 
     @BeforeEach
     void runBefore() {
         testCoordinator = new Coordinator("Carter");
         testStudent1 = new Student("Jason", 12345678);
+
         testStudent2 = new Student("Paul", 87654321);
         testStudent3 = new Student("Justin", 66666666);
+        testStudent4 = new Student("Justin", 12345678);
     }
 
     @Test
@@ -36,7 +39,7 @@ public class CoordinatorTest {
         assertEquals(1, listOfStudent1.size());
         assertEquals(testStudent1, listOfStudent1.get(0));
 
-        assertFalse(testCoordinator.addStudent(testStudent1));
+        assertFalse(testCoordinator.addStudent(testStudent4));
         List<Student> listOfStudent2 = testCoordinator.getAllStudents();
         assertEquals(1, listOfStudent2.size());
         assertEquals(testStudent1, listOfStudent2.get(0));
