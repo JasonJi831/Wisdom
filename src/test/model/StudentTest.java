@@ -222,7 +222,9 @@ public class StudentTest {
         testStudent.addACourseToWorkList("CPSC", 210);
         testStudent.addANewSectionToWorkList("CPSC", 210, 101);
         assertTrue(testStudent.deleteOneCourseSection("CPSC", 210, 101));
+        assertFalse(testStudent.deleteOneCourseSection("CPSC",345, 101));
         assertFalse(testStudent.deleteOneCourseSection("ECON",345, 101));
+        assertFalse(testStudent.deleteOneCourseSection("ECON",210, 101));
         List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
                 210);
         assertEquals(0, allSection1.size());
@@ -236,6 +238,8 @@ public class StudentTest {
         assertFalse(testStudent.dropOneCourseSection("CPSC", 210,101));
         testStudent.registerCourse("CPSC", 210 ,101);
         assertFalse(testStudent.dropOneCourseSection("MATH", 200, 101));
+        assertFalse(testStudent.dropOneCourseSection("MATH", 210, 101));
+        assertFalse(testStudent.dropOneCourseSection("CPSC", 200, 101));
         assertTrue(testStudent.dropOneCourseSection("CPSC", 210, 101));
         List<Integer> allSection1 = testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
                 210);
