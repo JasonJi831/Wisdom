@@ -38,15 +38,24 @@ public class Course {
     // EFFECTS: removes a given section number from the section list and returns true. If there is no such section,
     // returns false only.
     public Boolean removeSection(int sectionNum) {
-        if (!sectionList.isEmpty() && sectionList.contains(sectionNum)) {
-            for (int i = 0; i < sectionList.size(); i++) {
-                if (sectionList.get(i) == sectionNum) {
-                    sectionList.remove(i);
-                    return true;
-                }
+//        if (!sectionList.isEmpty() && sectionList.contains(sectionNum)) {
+//            for (int i = 0; i < sectionList.size(); i++) {
+//                if (sectionList.get(i) == sectionNum) {
+//                    sectionList.remove(i);
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+        for (int i = 0; i < sectionList.size(); i++) {
+            if (sectionList.get(i) == sectionNum) {
+                sectionList.remove(i);
+                return true;
             }
         }
         return false;
+
+
     }
 
 
