@@ -27,17 +27,16 @@ save time in course scheduling, making their work smoother and more efficient.
 
 
 ### User Stories:
-- As a user, I want to add a course to the course work list.-*addCourseToWorkList()*
-- As a user, I want to add a course to the course wait list.-*addCourseToWaitList()*
-- As a user, I want to register a course.--*registerCourse()*
-- As a user, I want to check if there are available seats in a course.--*ifSeatAvailable()*
+- As a user, I want to add a course to the course work list.-*addACourseToWorkList()*
+- As a user, I want to add a section of a course which is in the course work list.--*addANewSectionToWorkList()*
 
-- As a user, I want to drop a course for a student. (Removing a course from the
-  registered course list) --*dropCourse()*
-- As a user, I want to remove of a course from a student's course work list. --*deleteCourseFromWorkList()*
-- As a user, I want to remove of a course from a student's course wait list. --*removeCourseFromWaitList()*
-- As a user, I want to reduce the remaining available seats by one because someone has registered for this course.
-  --*remainingSeatsAdjust()*
+- As a user, I want to register a course (add a course to the course registered list).-*registerCourse()*
+- As a user, I want to show all of my courses in the course work list.-*showALlCourseInWorkList()*
+- As a user, I want to show all of my courses in the course registered list.-(showALlCourseInRegisteredList()*
+
+- As a user, I want to drop a course section. (Removing a course section from the registered course list) 
+- --*dropOneCourseSection()*
+
 
 
 

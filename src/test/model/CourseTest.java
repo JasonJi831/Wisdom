@@ -67,9 +67,15 @@ public class CourseTest {
         assertFalse(testCourse.removeSection(101));
         testCourse.addSection(101);
         assertFalse(testCourse.removeSection(102));
-        assertTrue(testCourse.removeSection(101));
+        testCourse.addSection(102);
+        assertTrue(testCourse.removeSection(102));
         List<Integer> testSectionList = testCourse.getAllSections();
-        assertEquals(0, testSectionList.size());
+        assertEquals(1, testSectionList.size());
+        assertEquals(101, testSectionList.get(0));
+
+
+
+
 
     }
 
@@ -81,6 +87,7 @@ public class CourseTest {
         List<Integer> testSectionList1 = testCourse.getAllSections();
         assertEquals(1, testSectionList1.size());
         assertEquals(102, testSectionList1.get(0));
+
         assertTrue(testCourse.removeSection(102));
         List<Integer> testSectionList2 = testCourse.getAllSections();
         assertEquals(0, testSectionList2.size());

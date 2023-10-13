@@ -140,10 +140,8 @@ public class Student {
                     return true;
                 }
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     // REQUIRES: course number > 0, section > 0
@@ -158,10 +156,8 @@ public class Student {
                     return true;
                 }
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
 
     }
 
