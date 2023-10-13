@@ -1,3 +1,6 @@
+// Reference: Sam, Jul 26.2021, TellerApp, java,
+// "https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java"
+
 package ui;
 
 import model.Course;
