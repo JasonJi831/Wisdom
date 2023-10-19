@@ -62,13 +62,14 @@ public class StudentTest {
 
     @Test
     void testAddANewSectionToWorkListByOnce() {
-        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        assertFalse(testStudent.addANewSectionToWorkList("CPSC", 210, 101));
         List<Course> testWorkList1 = testStudent.getWorkList();
         assertEquals(0, testWorkList1.size());
 
 
         testStudent.addACourseToWorkList("CPSC", 210);
-        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        assertTrue(testStudent.addANewSectionToWorkList("CPSC", 210, 101));
+        assertFalse(testStudent.addANewSectionToWorkList("CPSC", 210, 101));
         List<Course> testWorkList = testStudent.getWorkList();
         List<Integer> testSectionList = testWorkList.get(0).getAllSections();
         assertEquals(1, testSectionList.size());
@@ -80,8 +81,13 @@ public class StudentTest {
     @Test
     void testAddANewSectionToWorkListByMultiTimes() {
         testStudent.addACourseToWorkList("CPSC", 210);
-        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
-        testStudent.addANewSectionToWorkList("CPSC", 210, 102);
+        assertTrue(testStudent.addANewSectionToWorkList("CPSC", 210, 101));
+        assertTrue(testStudent.addANewSectionToWorkList("CPSC", 210, 102));
+
+        assertFalse(testStudent.addANewSectionToWorkList("CPSC", 210, 102));
+        assertFalse(testStudent.addANewSectionToWorkList("CPSC", 210, 101));
+        assertFalse(testStudent.addANewSectionToWorkList("CPSC", 210, 102));
+
         List<Course> testWorkList = testStudent.getWorkList();
         List<Integer> testSectionList = testWorkList.get(0).getAllSections();
         assertEquals(2, testSectionList.size());

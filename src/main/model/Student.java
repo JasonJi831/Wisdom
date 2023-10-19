@@ -35,14 +35,17 @@ public class Student {
 
     // REQUIRES: course number > 0, and section number > 0.
     // MODIFIES: this
-    // EFFECTS: adds a course section to the course work list with corresponding course subject, course number and
-    // section number.
-    public void addANewSectionToWorkList(String courseSubject, int courseNumber, int sectionNum) {
+    // EFFECTS: adds a course section to the course work list with corresponding course subject,
+    // course number and section number and returns true. If either a given section number has been added to
+    // this course or there is no any course in the work list, returns false only.
+    public boolean addANewSectionToWorkList(String courseSubject, int courseNumber, int sectionNum) {
         for (Course c : workList) {
-            if (c.sameCourse(courseSubject, courseNumber)) {
+            if (c.sameCourse(courseSubject, courseNumber) && !c.getAllSections().contains(sectionNum)) {
                 c.addSection(sectionNum);
+                return true;
             }
         }
+        return false;
     }
 
     // MODIFIES: this

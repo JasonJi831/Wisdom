@@ -18,7 +18,8 @@ public class Coordinator {
 
     // MODIFIES: this
     // EFFECTS: adds a student to the end of the list of students that the course coordinator oversees and returns true.
-    // If a given student has already added to the student list, return false only.
+    // If a given student has already added to the student list,
+    // return false only.
     public boolean addStudent(Student student) {
         int id = student.getId();
         for (Student s : students) {

@@ -1,6 +1,9 @@
 // Reference: Sam, Jul 26.2021, TellerApp, java,
 // "https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java"
 
+
+// Course Registration System.
+
 package ui;
 
 import model.Course;
@@ -226,9 +229,14 @@ public class CourseRegistrationSystem {
         if (command.equals("Yes")) {
             System.out.println("Please enter the section number you want to add (Please type an integer!)");
             int sectionNum = input.nextInt();
-            userStudent.addANewSectionToWorkList(courseSubject, courseNumber, sectionNum);
-            System.out.println("The section " + sectionNum + " has been added to the " + courseSubject
-                    + courseNumber + "!");
+            if (userStudent.addANewSectionToWorkList(courseSubject, courseNumber, sectionNum)) {
+                userStudent.addANewSectionToWorkList(courseSubject, courseNumber, sectionNum);
+                System.out.println("The section " + sectionNum + " has been added to the " + courseSubject
+                        + courseNumber + "!");
+            } else {
+                System.out.println("You have already added the section: " + sectionNum +  "before!! ");
+            }
+
         } else if (command.equals("No")) {
             workListProcess();
         } else {
