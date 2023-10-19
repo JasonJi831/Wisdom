@@ -26,6 +26,8 @@ which makes their work smoother and more efficient.
 
 
 ### User Stories:
+
+## Phase1
 - As a user, I want to add a course to the course work list.-*addACourseToWorkList()*
 - As a user, I want to add a section of a course which is in the course work list.--*addANewSectionToWorkList()*
 
@@ -35,6 +37,16 @@ which makes their work smoother and more efficient.
 
 - As a user, I want to drop a course section. (Removing a course section from the registered course list) 
 - --*dropOneCourseSection()*
+## Phase2
+- As a user, when I select quit option from the course registration system menu, 
+I want to be reminded to save my course work list and registration list.
+- As a user, when I open the course registration system, I want to give the 
+option to reload my work list and course registration list from exactly where I left off 
+at last time.
+
+
+
+
 
 
 
