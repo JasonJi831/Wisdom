@@ -39,7 +39,7 @@ public class CourseRegistrationSystem {
     private void runSystem() {
         boolean keepGoing = true;
         String command = null;
-
+        System.out.println("\nHello! Welcome to course registration system.");
         displayMenu();
 
         while (keepGoing) {
@@ -60,15 +60,28 @@ public class CourseRegistrationSystem {
     // MODIFIES: this
     // EFFECTS: displays menu of options to user
     private void displayMenu() {
-        System.out.print("Hello! What's your name?\n");
+        System.out.println("Do you want to load the course work list and the registered list from the file? "
+                + "(yes or no)");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
-        String name = input.next();
-        System.out.print("Hello, " + name + "!" + " Whats your student id?(8 digits)\n");
-        input.useDelimiter("\n");
-        int id = input.nextInt();
-        validId(name, id);
+        String choose = input.next();
+        choose = choose.toLowerCase();
+        if (choose.equals("yes")) {
+            loadBothList();
+        } else if (choose.equals("no")) {
+            System.out.print("Hello! What's your name?\n");
+            input = new Scanner(System.in);
+            input.useDelimiter("\n");
+            String name = input.next();
+            System.out.print("Hello, " + name + "!" + " Whats your student id?(8 digits)\n");
+            input.useDelimiter("\n");
+            int id = input.nextInt();
+            validId(name, id);
+        } else {
+            displayMenu();
+        }
     }
+
 
     // REQUIRES: id > 0
     // MODIFIES: this
@@ -81,7 +94,6 @@ public class CourseRegistrationSystem {
             input.useDelimiter("\n");
             int newId = input.nextInt();
             validId(name, newId);
-
         }
     }
 
@@ -97,9 +109,7 @@ public class CourseRegistrationSystem {
     private void firstOptions() {
         System.out.println("Please Select from:");
         System.out.println("\twork -> working on my course work list");
-        System.out.println("\tlwl -> load work list from file");
         System.out.println("\tr -> working on my course registered list");
-        System.out.println("\tlrl -> load registered list from file");
         System.out.println("\tq -> quit");
     }
 
@@ -107,19 +117,14 @@ public class CourseRegistrationSystem {
     private void processForStudent(String command) {
         if (command.equals("work")) {
             workListProcess();
-        } else if (command.equals("lwl")) {
-            loadWorkList();
         } else if (command.equals("r")) {
             registeredListProcess();
-        } else if (command.equals("lrl")) {
-            loadWorkList();
         } else {
             System.out.println("Your selection is not valid, please type it again! ");
         }
 
     }
 
-    // MODIFIES: this
     // EFFECTS: prompts user to select the actions for course work list.
     private void workListProcess() {
         String command = null;
@@ -132,10 +137,16 @@ public class CourseRegistrationSystem {
         System.out.println("\tr -> returns to the last step");
         command = input.next();
         command = command.toLowerCase();
+        workListProcessOperation(command);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: do the operation corresponding to the user's input.
+    private void workListProcessOperation(String command) {
         if (command.equals("o")) {
             showWorkList();
         } else if (command.equals("s")) {
-            saveWorkList();
+            saveBothList();
         } else if (command.equals("addc")) {
             addCourse();
         } else if (command.equals("adds")) {
@@ -314,7 +325,7 @@ public class CourseRegistrationSystem {
         if (command.equals("o")) {
             showRegisteredList();
         } else if (command.equals("s")) {
-            saveWorkList();
+            saveBothList();
         } else if (command.equals("reg")) {
             registerCourseProcess();
         } else if (command.equals("drop")) {
@@ -349,7 +360,9 @@ public class CourseRegistrationSystem {
             courseSubject = courseSubject.toUpperCase();
             System.out.println("Please type the course number of this course? (Please type an integer!)");
             int courseNumber = input.nextInt();
-            System.out.println(userStudent.showAllSectionOfThisCourseInRegisteredList(courseSubject, courseNumber));
+            System.out.println("You have registered the section:"
+                    + userStudent.showAllSectionOfThisCourseInRegisteredList(courseSubject, courseNumber)
+                    + " for " + courseSubject + " " + courseNumber);
         }
     }
 
@@ -423,8 +436,8 @@ public class CourseRegistrationSystem {
     }
 
 
-    // EFFECTS: saves the course work list to file
-    private void saveWorkList() {
+    // EFFECTS: saves the course work list and registered list to file
+    private void saveBothList() {
         try {
             jsonWriter.open();
             jsonWriter.write(userStudent);
@@ -436,8 +449,8 @@ public class CourseRegistrationSystem {
     }
 
     // MODIFIES: this
-    // EFFECTS: loads the course work list from the file
-    private void loadWorkList() {
+    // EFFECTS: loads the course work list and registered list from the file
+    private void loadBothList() {
         try {
             userStudent = jsonReader.read();
             System.out.println("Loaded " + userStudent.getName() + " 's work list from " + JSON_STORE);
@@ -445,6 +458,5 @@ public class CourseRegistrationSystem {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
-
 
 }

@@ -1,10 +1,14 @@
 {
     "name": "Jason",
     "work list": [{
-        "section List": [],
+        "section List": [102],
         "subject": "CPSC",
         "course number": 210
     }],
     "id": 10101010,
-    "registered list": []
+    "registered list": [{
+        "section List": [101],
+        "subject": "CPSC",
+        "course number": 210
+    }]
 }
