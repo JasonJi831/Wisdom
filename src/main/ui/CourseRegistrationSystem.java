@@ -7,26 +7,36 @@
 package ui;
 
 import model.Course;
-
 import model.Student;
 
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.*;
 
 public class CourseRegistrationSystem {
     private Student userStudent;
     private Scanner input;
-
+    private static final String JSON_STORE = "./data/student.json";
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the course registration system
-    public CourseRegistrationSystem() {
-        runRobot();
+    public CourseRegistrationSystem() throws FileNotFoundException {
+        input = new Scanner(System.in);
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        runSystem();
     }
+
 
     // MODIFIES: this
     // EFFECTS: processes user input
-    private void runRobot() {
+    private void runSystem() {
         boolean keepGoing = true;
         String command = null;
 
@@ -87,7 +97,9 @@ public class CourseRegistrationSystem {
     private void firstOptions() {
         System.out.println("Please Select from:");
         System.out.println("\twork -> working on my course work list");
+        System.out.println("\tlwl -> load work list from file");
         System.out.println("\tr -> working on my course registered list");
+        System.out.println("\tlrl -> load registered list from file");
         System.out.println("\tq -> quit");
     }
 
@@ -95,8 +107,12 @@ public class CourseRegistrationSystem {
     private void processForStudent(String command) {
         if (command.equals("work")) {
             workListProcess();
+        } else if (command.equals("lwl")) {
+            loadWorkList();
         } else if (command.equals("r")) {
             registeredListProcess();
+        } else if (command.equals("lrl")) {
+            loadWorkList();
         } else {
             System.out.println("Your selection is not valid, please type it again! ");
         }
@@ -109,6 +125,7 @@ public class CourseRegistrationSystem {
         String command = null;
         System.out.println("Please Select from:");
         System.out.println("\to -> open my work list");
+        System.out.println("\ts -> save my work list");
         System.out.println("\taddc -> adds a course to my work list");
         System.out.println("\tadds -> adds a section of a course to my work list");
         System.out.println("\td -> delete a section of a course from my work list");
@@ -117,19 +134,16 @@ public class CourseRegistrationSystem {
         command = command.toLowerCase();
         if (command.equals("o")) {
             showWorkList();
-
+        } else if (command.equals("s")) {
+            saveWorkList();
         } else if (command.equals("addc")) {
             addCourse();
-
         } else if (command.equals("adds")) {
             addNewSectionForEmptyWorkList();
-
         } else if (command.equals("d")) {
             deleteASection();
-
         } else if (command.equals("r")) {
             System.out.println("Welcome to HomePage!");
-
         } else {
             System.out.println("please type a valid letter! ");
             workListProcess();
@@ -234,7 +248,7 @@ public class CourseRegistrationSystem {
                 System.out.println("The section " + sectionNum + " has been added to the " + courseSubject
                         + courseNumber + "!");
             } else {
-                System.out.println("You have already added the section: " + sectionNum +  "before!! ");
+                System.out.println("You have already added the section: " + sectionNum + "before!! ");
             }
 
         } else if (command.equals("No")) {
@@ -265,7 +279,6 @@ public class CourseRegistrationSystem {
                 System.out.println("You have not add any section for this course!!!");
             } else {
                 deleteASectionProcess(courseSubject, courseNumber);
-
             }
         }
     }
@@ -292,6 +305,7 @@ public class CourseRegistrationSystem {
         String command = null;
         System.out.println("Please Select from:");
         System.out.println("\to -> open my registered list");
+        System.out.println("\ts -> save my registered list");
         System.out.println("\treg -> register a section of a course");
         System.out.println("\tdrop-> drop a section of a course");
         System.out.println("\tret -> returns to the last step");
@@ -299,6 +313,8 @@ public class CourseRegistrationSystem {
         command = command.toLowerCase();
         if (command.equals("o")) {
             showRegisteredList();
+        } else if (command.equals("s")) {
+            saveWorkList();
         } else if (command.equals("reg")) {
             registerCourseProcess();
         } else if (command.equals("drop")) {
@@ -404,7 +420,30 @@ public class CourseRegistrationSystem {
     public void alreadyRegister() {
         System.out.println("You have already registered this course!!!");
         registeredListProcess();
+    }
 
+
+    // EFFECTS: saves the course work list to file
+    private void saveWorkList() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(userStudent);
+            jsonWriter.close();
+            System.out.println("Saved " + userStudent.getName() + "'s work list to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the course work list from the file
+    private void loadWorkList() {
+        try {
+            userStudent = jsonReader.read();
+            System.out.println("Loaded " + userStudent.getName() + " 's work list from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 
 

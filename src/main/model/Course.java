@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.*;
 
 // Represents a course with its course subject code, course number, and a list of sections,
-public class Course {
+public class Course implements Writable {
 
     private String subject;
     private int courseNumber;
@@ -18,6 +22,26 @@ public class Course {
         this.sectionList = new ArrayList<>();
 
     }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("subject", subject);
+        json.put("course number", courseNumber);
+        json.put("section List", sectionListToJson());
+        return json;
+    }
+
+    // EFFECTS: returns the section list of a course as a JSON array
+    private JSONArray sectionListToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (int s : sectionList) {
+            jsonArray.put(s);
+        }
+        return jsonArray;
+    }
+
 
     // REQUIRES: course number > 0
     // EFFECTS: returns true if a given course subject and a given course number are same as this course;
@@ -64,7 +88,6 @@ public class Course {
     // EFFECTS: returns all sections of the course
     public List<Integer> getAllSections() {
         return sectionList;
-
 
     }
 

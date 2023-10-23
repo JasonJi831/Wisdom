@@ -1,11 +1,16 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+
 import java.util.*;
 import java.lang.String;
 
 // Represents a student with a name, an eight-digit student ID, a course work list and a registered course list.
 
-public class Student {
+public class Student implements Writable {
 
     private String name;
     private int id;
@@ -21,6 +26,40 @@ public class Student {
         this.workList = new ArrayList<>();
         this.registeredList = new ArrayList<>();
     }
+
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("id", id);
+        json.put("work list", workListToJson());
+        json.put("registered list", registeredListToJson());
+
+        return json;
+    }
+
+    // EFFECTS: returns the course work list as a JSON array
+    private JSONArray workListToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Course c: workList) {
+            jsonArray.put(c.toJson());
+        }
+
+        return jsonArray;
+    }
+
+    // EFFECTS: returns the course registration list as a JSON array
+    private JSONArray registeredListToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Course c: registeredList) {
+            jsonArray.put(c.toJson());
+        }
+        return jsonArray;
+    }
+
 
 
     // REQUIRES: course number > 0
