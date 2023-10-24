@@ -24,7 +24,7 @@ class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderEmptyStudent() {
-        JsonReader reader = new JsonReader("./data/testReaderEmptyStudent.json");
+        JsonReader reader = new JsonReader("./data/testReaderStudentWithTwoEmptyList.json");
         try {
             Student s = reader.read();
             assertEquals("testStudent", s.getName());

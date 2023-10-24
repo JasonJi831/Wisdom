@@ -1,7 +1,7 @@
 {
   "name": "testStudent",
   "work list": [{
-    "section List": [],
+    "section List": [101],
     "subject": "CPSC",
     "course number": 210
   }],
