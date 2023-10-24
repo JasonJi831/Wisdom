@@ -1,0 +1,14 @@
+{
+    "name": "testStudent",
+    "work list": [{
+        "section List": [],
+        "subject": "CPSC",
+        "course number": 210
+    }],
+    "id": 11111111,
+    "registered list": [{
+        "section List": [101],
+        "subject": "CPSC",
+        "course number": 110
+    }]
+}
