@@ -38,12 +38,9 @@ which makes their work smoother and more efficient.
 - As a user, I want to drop a course section. (Removing a course section from the registered course list) 
 - --*dropOneCourseSection()*
 ## Phase2
-- As a user, when I select quit option from the course registration system menu, 
-I want to be reminded to save my course work list and registration list.
-- As a user, when I open the course registration system, I want to give the 
-option to reload my work list and course registration list from exactly where I left off 
-at last time.
-
+- As a user, I want to save my current course work list or registered list for future use.
+- As a user, when I open the course registration system, I want to be given the option to reload the previously 
+saved work list and course registration list from where I left off at the last time.
 
 
 
