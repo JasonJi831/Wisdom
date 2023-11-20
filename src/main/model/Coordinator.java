@@ -13,7 +13,6 @@ public class Coordinator {
     public Coordinator(String name) {
         this.name = name;
         this.students = new ArrayList<>();
-
     }
 
     // MODIFIES: this
@@ -26,7 +25,6 @@ public class Coordinator {
             while (s.getId() == id) {
                 return false;
             }
-
         }
         students.add(student);
         return true;

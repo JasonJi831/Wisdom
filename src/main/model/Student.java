@@ -35,7 +35,6 @@ public class Student implements Writable {
         json.put("id", id);
         json.put("work list", workListToJson());
         json.put("registered list", registeredListToJson());
-
         return json;
     }
 

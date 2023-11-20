@@ -13,7 +13,6 @@ public class ClassTime {
         this.day = day;
         this.startingTime = startingTime;
         this.endingTime = endingTime;
-
     }
 
 
