@@ -60,12 +60,26 @@ public class StudentTest {
     }
 
     @Test
-    void testAddANewCourseToWorkListCheckSameCourse() {
+    void testAddANewCourseToWorkListCheckSameCourseByOnce() {
         assertFalse(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
         testStudent.addACourseToWorkList("CPSC", 210);
         assertTrue(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
 
     }
+
+
+    @Test
+    void testAddANewCourseToWorkListCheckSameCourseByMultiTimes() {
+        testStudent.addACourseToWorkList("ECON", 210);
+        assertFalse(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
+        testStudent.addACourseToWorkList("CPSC", 105);
+        assertFalse(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
+
+
+    }
+
+
+
 
     @Test
     void testAddANewSectionToWorkListCheckSameCourseByOnce() {
@@ -91,8 +105,16 @@ public class StudentTest {
 
     @Test
     void testAddANewSectionToWorkListCheckSameSection() {
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
+                210));
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("ECON", 210,
+                210));
         testStudent.addACourseToWorkList("CPSC", 210);
         assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
+                210));
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
+                101));
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("ECON", 210,
                 101));
         testStudent.addANewSectionToWorkList("CPSC",210, 101);
         assertTrue(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
@@ -104,6 +126,8 @@ public class StudentTest {
         assertFalse(testStudent.workListContainSameCourse("CPSC",210));
         testStudent.addACourseToWorkList("CPSC",210);
         assertTrue(testStudent.workListContainSameCourse("CPSC",210));
+        assertFalse(testStudent.workListContainSameCourse("CPSC",110));
+        assertFalse(testStudent.workListContainSameCourse("ECON",210));
 
     }
 
