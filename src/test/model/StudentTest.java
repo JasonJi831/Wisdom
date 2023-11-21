@@ -57,6 +57,53 @@ public class StudentTest {
         assertEquals("ECON", testCourse2.getSubject());
         assertEquals(345, testCourse2.getCourseNumber());
 
+    }
+
+    @Test
+    void testAddANewCourseToWorkListCheckSameCourse() {
+        assertFalse(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
+        testStudent.addACourseToWorkList("CPSC", 210);
+        assertTrue(testStudent.addANewCourseToWorkListCheckSameCourse("CPSC", 210));
+
+    }
+
+    @Test
+    void testAddANewSectionToWorkListCheckSameCourseByOnce() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        assertTrue(testStudent.addANewSectionToWorkListCheckSameCourse("CPSC", 210,
+                101));
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameCourse("ECON", 210,
+                101));
+
+
+    }
+
+    @Test
+    void testAddANewSectionToWorkListCheckSameCourseByMultiTimes() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameCourse("ECON", 345,
+                101));
+        testStudent.addACourseToWorkList("ECON", 345);
+        assertTrue(testStudent.addANewSectionToWorkListCheckSameCourse("ECON", 345,
+                101));
+
+    }
+
+    @Test
+    void testAddANewSectionToWorkListCheckSameSection() {
+        testStudent.addACourseToWorkList("CPSC", 210);
+        assertFalse(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
+                101));
+        testStudent.addANewSectionToWorkList("CPSC",210, 101);
+        assertTrue(testStudent.addANewSectionToWorkListCheckSameSection("CPSC", 210,
+                101));
+    }
+
+    @Test
+    void testWorkListContainSameCourse() {
+        assertFalse(testStudent.workListContainSameCourse("CPSC",210));
+        testStudent.addACourseToWorkList("CPSC",210);
+        assertTrue(testStudent.workListContainSameCourse("CPSC",210));
 
     }
 

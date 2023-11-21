@@ -12,6 +12,7 @@ import persistence.JsonReader;
 import persistence.JsonWriter;
 
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -441,9 +442,12 @@ public class CourseRegistrationSystem {
             jsonWriter.open();
             jsonWriter.write(userStudent);
             jsonWriter.close();
-            System.out.println("Saved " + userStudent.getName() + "'s work list to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
+            JOptionPane.showMessageDialog(null, "Saved to " + JSON_STORE,
+                    "Save Successful", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) { // Catch a more general exception
+            e.printStackTrace(); // Print the stack trace for debugging
+            JOptionPane.showMessageDialog(null, "Unable to write to file: "
+                    + JSON_STORE, "Save Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

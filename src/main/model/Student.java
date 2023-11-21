@@ -42,7 +42,7 @@ public class Student implements Writable {
     private JSONArray workListToJson() {
         JSONArray jsonArray = new JSONArray();
 
-        for (Course c: workList) {
+        for (Course c : workList) {
             jsonArray.put(c.toJson());
         }
 
@@ -53,12 +53,11 @@ public class Student implements Writable {
     private JSONArray registeredListToJson() {
         JSONArray jsonArray = new JSONArray();
 
-        for (Course c: registeredList) {
+        for (Course c : registeredList) {
             jsonArray.put(c.toJson());
         }
         return jsonArray;
     }
-
 
 
     // REQUIRES: course number > 0
@@ -70,6 +69,61 @@ public class Student implements Writable {
 
     }
 
+    // REQUIRES: course number > 0.
+    // MODIFIES: this
+    // EFFECTS: returns true if there is course in the work list that has a same name of subject and course number;
+    // false otherwise
+    public boolean addANewCourseToWorkListCheckSameCourse(String courseSubject, int courseNumber) {
+        for (Course c : workList) {
+            if (c.sameCourse(courseSubject, courseNumber)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    // REQUIRES: course number > 0, and section number > 0.
+    // MODIFIES: this
+    // EFFECTS: returns false If there is no such course with the same course subject and courseNumber
+    // in the work list, true otherwise.
+    public boolean workListContainSameCourse(String courseSubject, int courseNumber) {
+        for (Course c : workList) {
+            if (c.sameCourse(courseSubject, courseNumber)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    // REQUIRES: course number > 0, and section number > 0.
+    // MODIFIES: this
+    // EFFECTS: adds a course section to the course work list with corresponding course subject,
+    // course number and section number and returns true. If there is no such course in the work list,
+    // returns false only.
+    public boolean addANewSectionToWorkListCheckSameCourse(String courseSubject, int courseNumber, int sectionNum) {
+        for (Course c : workList) {
+            if (c.sameCourse(courseSubject, courseNumber)) {
+                c.addSection(sectionNum);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // REQUIRES: workList already has a course with the same subject and courseNumber.
+    // EFFECT: returns true if a sectionNumber has been added to a course with the same subject and courseNumber, false
+    // otherwise.
+    public boolean addANewSectionToWorkListCheckSameSection(String subject, int courseNumber, int sectionNumber) {
+        for (Course c : workList) {
+            if (c.sameCourse(subject, courseNumber)) {
+                return c.getAllSections().contains(sectionNumber);
+            }
+        }
+        return false;
+    }
 
     // REQUIRES: course number > 0, and section number > 0.
     // MODIFIES: this

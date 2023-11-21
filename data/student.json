@@ -1,0 +1,27 @@
+{
+    "name": "Jason",
+    "work list": [
+        {
+            "section List": [],
+            "subject": "CPSC",
+            "course number": 210
+        },
+        {
+            "section List": [101],
+            "subject": "CPSC",
+            "course number": 121
+        },
+        {
+            "section List": [],
+            "subject": "CPSC",
+            "course number": 121
+        },
+        {
+            "section List": [],
+            "subject": "CPSC",
+            "course number": 101
+        }
+    ],
+    "id": 101010,
+    "registered list": []
+}

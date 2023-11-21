@@ -1,6 +1,7 @@
 package ui;
 
 
+import model.Course;
 import model.Student;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -17,19 +18,26 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseRegistrationGUI extends JFrame {
     private JTextField nameField;
     private JTextField studentIdField;
-    private JPanel loginTitlePanel;
+    private JTextField courseNumberField;
+    private JTextField subjectField;
+    private JTextField sectionField;
+    private JTextField subjectFieldSection;
+    private JTextField courseNumberFieldSection;
+
     private JPanel loginPanel;
     private JPanel loginButtonPanel;
     private JLabel statusLabel;
-    private JButton btnYes;
-    private JButton btnNo;
     private JPanel backgroundPanel;
     private JMenu menu;
     private JScrollPane scrollPane;
+    private JPanel infoPanel;
+    private JPanel topBarPanel;
 
     // field for saving and loading
     private static final String JSON_STORE = "./data/student.json";
@@ -38,15 +46,27 @@ public class CourseRegistrationGUI extends JFrame {
     private Student userStudent;
 
 
-    // Show the login page of the course registration system
+    // EFFECTS: Show the login page of the course registration system
     public CourseRegistrationGUI() {
         super("Course Registration System");
-        setSize(550, 300);
+        setSize(600, 300);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener();
         setupBackground();
+        initializeInfoPanel();
         setResizable(true);
         setVisible(true);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds an infoPanel with no data to this JFrame
+    private void initializeInfoPanel() {
+        infoPanel = new JPanel();
+        infoPanel.setPreferredSize(new Dimension(600, 300));
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
+        String[][] emptyArray = {};
+        showCourseWorkList(infoPanel, emptyArray);
+        backgroundPanel.add(infoPanel);
     }
 
     // MODIFIES: this
@@ -55,19 +75,19 @@ public class CourseRegistrationGUI extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(null, "Do you want to save the current"
-                                + " course work list and registered list?", "Save or not",
-                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
+                int result = JOptionPane.showConfirmDialog(null,
+                        "Do you want to save the current" + " course work list and registered list?",
+                        "Save or not", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    saveBothLists(); // Save the lists
-                    dispose(); // Close the application
+                    saveBothLists();
+                    dispose();
                 } else if (result == JOptionPane.NO_OPTION) {
-                    dispose(); // Close the application without saving
-                } // else if result is CANCEL_OPTION, do nothing, the window will not close
+                    dispose();
+                }
             }
         });
     }
+
 
     // MODIFIES: this
     // EFFECTS: saves the course work list and registered list to the file.
@@ -86,9 +106,7 @@ public class CourseRegistrationGUI extends JFrame {
 
 
     // MODIFIES: this
-    // EFFECTS: prompts the user entry the number of tables (the size of that ArrayList<Table>) or load a state
-    //          sets up myRestaurant according to user's choice
-    //          initials and set up all elements of the JFrame window
+    // EFFECTS: initials and set up all elements of the JFrame window
     private void setupBackground() {
         backgroundPanel = new JPanel();
         backgroundPanel.setBackground(Color.white);
@@ -129,30 +147,20 @@ public class CourseRegistrationGUI extends JFrame {
     // EFFECTS: shows the login interface.
     private void login() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(createTitlePanel(), BorderLayout.NORTH);
         add(createLoginPanel(), BorderLayout.CENTER);
         add(createButtonPanel(null), BorderLayout.SOUTH);
-
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        String name = nameField.getText();
-        int id = Integer.parseInt(studentIdField.getText());
-        userStudent = new Student(name, id);
-        remove(loginTitlePanel);
-        remove(loginPanel);
-        remove(loginButtonPanel);
-
     }
 
     // EFFECTS: prompts the user to the homepage, creates a bar to make it more elaborated.
     private void homepage(String name, int id) {
-        remove(loginButtonPanel);
-        JPanel topBarPanel = new JPanel(new BorderLayout());
+        topBarPanel = new JPanel(new BorderLayout());
         topBarPanel.setBackground(new Color(0, 51, 102));
         topBarPanel.setBorder(BorderFactory.createEmptyBorder());
         getContentPane().add(topBarPanel, BorderLayout.NORTH);
-        JLabel titleLabel = new JLabel("Student Service Centre");
+        JLabel titleLabel = new JLabel("Student Course Registration System");
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         JLabel userInfoLabel = new JLabel("Name:  " + name + "      Student #:  " + id);
@@ -161,57 +169,251 @@ public class CourseRegistrationGUI extends JFrame {
         topBarPanel.add(titleLabel, BorderLayout.WEST);
         topBarPanel.add(userInfoLabel, BorderLayout.EAST);
         topBarPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        getContentPane().add(topBarPanel, BorderLayout.NORTH);
+        add(topBarPanel, BorderLayout.NORTH);
+        add(infoPanel, BorderLayout.CENTER);
         setVisible(true);
         topBarPanel.revalidate();
         topBarPanel.repaint();
-        comboBoxOfTwoList();
+        menuBar();
+        addCoursesButton();
     }
 
-    // EFFECTS: creates a combo box for course workList and registered list.
-    private void comboBoxOfTwoList() {
-        setSize(1200, 800);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        String[] options = {"Course Worklist", "Registered List"};
-        JComboBox<String> listComboBox = new JComboBox<>(options);
-        createsListerForBothList(listComboBox);
-        add(listComboBox, BorderLayout.SOUTH);
+    // EFFECTS: add two buttons that can prompt the user to add courses or add sections the course workList.
+    private void addCoursesButton() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JButton addCoursesButton = new JButton("add courses");
+        JButton addSectionsButton = new JButton("add a section");
+        JButton deleteButton = new JButton("delete courses");
+        Dimension buttonSize = new Dimension(200, 67);
+        Font buttonFont = new Font("Arial", Font.BOLD, 18);
+        addCoursesButton.setPreferredSize(buttonSize);
+        addSectionsButton.setPreferredSize(buttonSize);
+        deleteButton.setPreferredSize(buttonSize);
+        addCoursesButton.setFont(buttonFont);
+        addSectionsButton.setFont(buttonFont);
+        deleteButton.setFont(buttonFont);
+        buttonPanel.add(addCoursesButton);
+        buttonPanel.add(addSectionsButton);
+        buttonPanel.add(deleteButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+        addListenerToAddCoursesButton(addCoursesButton);
+        addListenerToAddSectionsButton(addSectionsButton);
+        addListenerToDeleteCoursesButton(deleteButton);
+
     }
 
-    // EFFECTS: creates the listener for the course workList and registered list
-    private void  createsListerForBothList(JComboBox<String> listComboBox) {
-        listComboBox.addActionListener(new ActionListener() {
+    // EFFECTS: add a listener to the button "add courses"
+    private void addListenerToDeleteCoursesButton(JButton acButton) {
+        acButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox) e.getSource();
-                String selectedList = (String) cb.getSelectedItem();
-                if ("Course Worklist".equals(selectedList)) {
-                    cb.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            showWorkListMenuBar();
-                        }
-                    });
-                } else if ("Registered List".equals(selectedList)) {
-                    cb.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            showWorkListMenuBar();
-                        }
-                    });
-                }
+//                deleteCoursesInWorkListPanel();
             }
         });
     }
 
 
+    // EFFECTS: add a listener to the button "add courses"
+    private void addListenerToAddCoursesButton(JButton acButton) {
+        acButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addCoursesInWorkListPanel();
+            }
+        });
+    }
 
-    // EFFECTS: constructs and shows the menu bar of the course Work List
-    private void showWorkListMenuBar() {
+    // EFFECTS: add a listener to the button "add sections"
+    private void addListenerToAddSectionsButton(JButton asButton) {
+        asButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addSectionsInWorkListPanel();
+            }
+        });
+    }
+
+    // MODIFIES: this
+    // EFFECTS: shows a panel that can let the user type in the course subject and course number.
+    private void addCoursesInWorkListPanel() {
+        JPanel addACoursePanel = new JPanel();
+        addACoursePanel.setLayout(new GridLayout(2, 2));
+        JLabel subjectLabel = new JLabel("Course Subject: ");
+        subjectField = new JTextField(20);
+        addACoursePanel.add(subjectLabel);
+        addACoursePanel.add(subjectField);
+        JLabel courseNumberLabel = new JLabel("Course Number: ");
+        courseNumberField = new JTextField(20);
+        addACoursePanel.add(courseNumberLabel);
+        addACoursePanel.add(courseNumberField);
+        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
+                "Add a course", JOptionPane.OK_CANCEL_OPTION);
+        addCoursesSaving(result);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: shows a panel that can let the user type in the course subject and course number.
+    private void addSectionsInWorkListPanel() {
+        JPanel addACoursePanel = new JPanel();
+        addACoursePanel.setLayout(new GridLayout(3, 2));
+        JLabel subjectLabel = new JLabel("Course Subject: ");
+        subjectFieldSection = new JTextField(20);
+        addACoursePanel.add(subjectLabel);
+        addACoursePanel.add(subjectFieldSection);
+        JLabel courseNumberLabel = new JLabel("Course Number: ");
+        courseNumberFieldSection = new JTextField(20);
+        addACoursePanel.add(courseNumberLabel);
+        addACoursePanel.add(courseNumberFieldSection);
+        JLabel sectionLabel = new JLabel("Section Number: ");
+        sectionField = new JTextField(20);
+        addACoursePanel.add(sectionLabel);
+        addACoursePanel.add(sectionField);
+        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
+                "Add a section", JOptionPane.OK_CANCEL_OPTION);
+        addSectionsSaving(result);
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: add a section to the userStudent's course workList
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
+    // if the user has been added such a course to course work list, remind user by popping a message
+    private void addSectionsSaving(int result) {
+        if (result == JOptionPane.OK_OPTION) {
+            String subject = subjectFieldSection.getText().trim();
+            String courseNumberStr = courseNumberFieldSection.getText().trim();
+            int sectionNumber = Integer.parseInt(sectionField.getText().trim());
+            if (!courseNumberStr.isEmpty()) {
+                try {
+                    int courseNumber = Integer.parseInt(courseNumberStr);
+                    addSection(subject, courseNumber, sectionNumber);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter a valid course number.",
+                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Course number cannot be empty.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        updatePanelInWorkList();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: add a section to the userStudent's course workList
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
+    // if the user has been added such a course to course work list, remind user by popping a message
+    private void addCoursesSaving(int result) {
+        if (result == JOptionPane.OK_OPTION) {
+            String subject = subjectField.getText().trim();
+            String courseNumberStr = courseNumberField.getText().trim();
+            if (!courseNumberStr.isEmpty()) {
+                try {
+                    int courseNumber = Integer.parseInt(courseNumberStr);
+                    checkSameCourseAdded(subject, courseNumber);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter a valid course number.",
+                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Course number cannot be empty.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS; update the panel only if the user add a course that has not existed in the course work list.
+    private void checkSameCourseAdded(String subject, int courseNumber) {
+        if (userStudent.addANewCourseToWorkListCheckSameCourse(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "You have added " + subject + courseNumber + " to the course work list",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            userStudent.addACourseToWorkList(subject, courseNumber);
+            updatePanelInWorkList();
+        }
+    }
+
+    // EFFECTS: add a section to the workList panel, popping notification if user types a course which has not existed
+    // in the panel or the section this user wants to add has already been added to the panel
+    private void addSection(String subject, int courseNumber, int sectionNumber) {
+        if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else if (userStudent.addANewSectionToWorkListCheckSameSection(subject, courseNumber, sectionNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "You have already added the section: " + subject + courseNumber + "-"
+                            + sectionNumber + " before!! ",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            userStudent.addANewSectionToWorkList(subject, courseNumber, sectionNumber);
+        }
+    }
+
+
+
+
+    // EFFECTS: update the panel that shows the course details of each course in course workList
+    private void updatePanelInWorkList() {
+        infoPanel.remove(scrollPane); // Remove the old scrollPane.
+        List<Course> courseListInWorkList = userStudent.getWorkList();
+        String[][] courseData = getWorkListData(courseListInWorkList);
+        showCourseWorkList(infoPanel, courseData);
+//        add(infoPanel, BorderLayout.CENTER);
+        infoPanel.revalidate();
+        infoPanel.repaint();
+        add(infoPanel);
+        revalidate();
+        repaint();
+
+    }
+
+    // EFFECTS: show the data on the panel
+    private void showCourseWorkList(JPanel infoPanel, String[][] courseData) {
+        remove(infoPanel);
+        Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
+        String[] columnNames = {"Subject", "Course No.", "Section No."};
+        Object[][] data = courseData;
+        JTable courseTable = new JTable(data, columnNames);
+        courseTable.setEnabled(false);
+        courseTable.getTableHeader().setFont(headerFont);
+        scrollPane = new JScrollPane(courseTable);
+        scrollPane.setPreferredSize(new Dimension(600, 300));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        infoPanel.add(scrollPane);
+
+    }
+
+    // EFFECTS: returns String[][] orderListData according to the current state of myRestaurant
+    private String[][] getWorkListData(List<Course> courseList) {
+        String[][] courseData = new String[courseList.size()][4];
+        for (int i = 0; i < courseList.size(); i++) {
+            Course c = courseList.get(i);
+            courseData[i][0] = c.getSubject();
+            courseData[i][1] = String.valueOf(c.getCourseNumber());
+            List<Integer> sectionNumbers = c.getAllSections();
+            courseData[i][2] = sectionNumbers.stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+        }
+        return courseData;
+    }
+
+
+    // EFFECTS: creates a menuBar called options
+    private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
         menu = new JMenu("Options");
-        addCourseListener();
+        courseWorkListListener();
+        courseRegisteredListener();
         menuBar.add(menu);
         setJMenuBar(menuBar);
         setSize(1000, 600);
@@ -219,144 +421,31 @@ public class CourseRegistrationGUI extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
-    // EFFECTS: creates the listener for the button "Add courses"
-    private void addCourseListener() {
-        JMenuItem addCourseItem = new JMenuItem("Add courses");
-        addCourseItem.addActionListener(new ActionListener() {
+    // EFFECTS: creates the listener for the course workList "item"
+    private void courseWorkListListener() {
+        JMenuItem courseWorkListItem = new JMenuItem("Course WorkList");
+        courseWorkListItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showCourseWorklist();
+                updatePanelInWorkList();
             }
         });
-        menu.add(addCourseItem);
+        menu.add(courseWorkListItem);
     }
 
-//    // EFFECTS: add the listener to comboBox
-//    private addListenerToComboBox() {
-//        listComboBox.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                JComboBox cb = (JComboBox) e.getSource();
-//                String selectedList = (String) cb.getSelectedItem();
-//                if ("Course Worklist".equals(selectedList)) {
-//                    showList(courseWorklistData);
-//                } else if ("Registered List".equals(selectedList)) {
-//                    showList(registeredListData);
-//                }
-//            }
-//        });
-//
-//        // Add the combo box to the frame (e.g., at the NORTH location)
-//        this.add(listComboBox, BorderLayout.NORTH);
-//
-//        // Initialize the content panel and add it to the frame
-//        contentPanel = new JPanel();
-//        this.add(contentPanel, BorderLayout.CENTER);
-//
-//        // Start by showing the course worklist
-//        showList(courseWorklistData);
-//    }
+    // EFFECTS: creates the listener for the course registered "item"
+    private void courseRegisteredListener() {
 
-
-//    // EFFECTS:
-//    private void menuBar() {
-//        JMenuBar menuBar = new JMenuBar();
-//        menu = new JMenu("Options");
-//        courseWorkListListener();
-//        courseRegisteredListener();
-//        menuBar.add(menu);
-//        frame.setJMenuBar(menuBar);
-//        frame.setSize(1000, 600);
-//        frame.setLocationRelativeTo(null);
-//        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//    }
-
-//    // EFFECTS: creates the listener for the course workList "item"
-//    private void courseWorkListListener() {
-//        JMenuItem courseWorkListItem = new JMenuItem("Course WorkList");
-//        courseWorkListItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                showCourseWorklist();
-//            }
-//        });
-//        menu.add(courseWorkListItem);
-//    }
-//
-//    // EFFECTS: creates the listener for the course registered "item"
-//    private void courseRegisteredListener() {
-//
-//        JMenuItem registeredListItem = new JMenuItem("Registered List");
-//        registeredListItem.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
+        JMenuItem registeredListItem = new JMenuItem("Registered List");
+        registeredListItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 //                showRegisteredList();
-//            }
-//        });
-//        menu.add(registeredListItem);
-//    }
-
-
-    private void showCourseWorklist() {
-        String[] columnNames = {"Subject", "Course No.", "Section No."};
-
-        // Sample data, you would replace this with your actual course worklist data
-        Object[][] data = {
-                {"CONS 127", "Lecture", "1"},
-                {"CPSC 210", "Lecture", "1"}
-        };
-
-        // Create the table with the data and column names
-        JTable table = new JTable(data, columnNames);
-
-        // Improve table appearance and functionality
-        table.setFillsViewportHeight(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Add the table to a scroll pane in case the data exceeds the visible area
-        scrollPane = new JScrollPane(table);
-
-        // Add the scroll pane to the frame (or a panel within the frame)
-        add(scrollPane, BorderLayout.CENTER);
-
-        // Refresh the frame to show the new table
-        revalidate();
-        repaint();
+            }
+        });
+        menu.add(registeredListItem);
     }
 
-    private void showRegisteredList() {
-        String[] columnNames = {"Subject", "Course No.", "Section No."};
-
-        // Sample data, you would replace this with your actual course worklist data
-        Object[][] data = {
-                {"CPSC 110", "Lecture", "1"},
-                {"CPSC 121", "Lecture", "1"}
-        };
-
-        // Create the table with the data and column names
-        JTable table = new JTable(data, columnNames);
-
-        // Improve table appearance and functionality
-        table.setFillsViewportHeight(true);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Add the table to a scroll pane in case the data exceeds the visible area
-        scrollPane = new JScrollPane(table);
-
-        // Add the scroll pane to the frame (or a panel within the frame)
-        add(scrollPane, BorderLayout.CENTER);
-
-        // Refresh the frame to show the new table
-        revalidate();
-        repaint();
-    }
-
-
-    // EFFECTS: creates the title panel.
-    private JPanel createTitlePanel() {
-        loginTitlePanel = new JPanel();
-        return loginTitlePanel;
-    }
 
     // EFFECTS: creates the login panel.
     private JPanel createLoginPanel() {
@@ -379,16 +468,19 @@ public class CourseRegistrationGUI extends JFrame {
         return loginButtonPanel;
     }
 
+    // EFFECTS: add a listener to login button
     private void addLoginListener(JButton loginButton) {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
-                String studentIdStr = studentIdField.getText();
+                int studentId = Integer.parseInt(studentIdField.getText());
+                userStudent = new Student(name, studentId);
                 try {
-                    int studentId = Integer.parseInt(studentIdStr);
                     remove(loginPanel);
+                    remove(loginButtonPanel);
                     homepage(name, studentId);
+
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null,
                             "Please enter a valid student ID (numbers only).",
@@ -402,20 +494,35 @@ public class CourseRegistrationGUI extends JFrame {
     private void loadHistory() {
         statusLabel = new JLabel("Do you want to load the previous course work list and the registered "
                 + "list from the file?", SwingConstants.CENTER);
-        btnYes = new JButton("For sure!");
-        btnNo = new JButton("Start a new one!");
+        JButton btnYes = new JButton("For sure!");
+        JButton btnNo = new JButton("Start a new one!");
         btnYes.setBounds(100, 190, 150, 40);
         btnNo.setBounds(280, 190, 150, 40);
         statusLabel.setBounds(-20, 50, 600, 40);
         backgroundPanel.add(statusLabel, BorderLayout.CENTER);
         backgroundPanel.add(btnYes);
         backgroundPanel.add(btnNo);
+        addListenerToButtonYes(btnYes);
+        addListenerToButtonNo(btnNo);
+    }
+
+    // EFFECTS: add a listener to the button "Yes"
+    private void addListenerToButtonYes(JButton btnYes) {
         btnYes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadBothList();
+                updatePanelInWorkList();
+                homepage(userStudent.getName(), userStudent.getId());
+
             }
         });
+
+    }
+
+    // EFFECTS: add a listener to the button "No"
+    private void addListenerToButtonNo(JButton btnNo) {
+
         btnNo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -424,6 +531,7 @@ public class CourseRegistrationGUI extends JFrame {
             }
         });
     }
+
 
     // MODIFIES: this
     // EFFECTS: loads the course work list and registered list from the file
@@ -437,7 +545,6 @@ public class CourseRegistrationGUI extends JFrame {
                     "Unable to load from file " + JSON_STORE,
                     "Fail to load", JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
     // EFFECTS: run the course registration GUI
