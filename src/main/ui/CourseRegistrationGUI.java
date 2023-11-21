@@ -29,6 +29,9 @@ public class CourseRegistrationGUI extends JFrame {
     private JTextField sectionField;
     private JTextField subjectFieldSection;
     private JTextField courseNumberFieldSection;
+    private JTextField deleteSubjectField;
+    private JTextField deleteCourseNumberField;
+    private JTextField deleteSectionField;
 
     private JPanel loginPanel;
     private JPanel loginButtonPanel;
@@ -184,8 +187,8 @@ public class CourseRegistrationGUI extends JFrame {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton addCoursesButton = new JButton("add courses");
         JButton addSectionsButton = new JButton("add a section");
-        JButton deleteButton = new JButton("delete courses");
-        Dimension buttonSize = new Dimension(200, 67);
+        JButton deleteButton = new JButton("delete course sections");
+        Dimension buttonSize = new Dimension(240, 86);
         Font buttonFont = new Font("Arial", Font.BOLD, 18);
         addCoursesButton.setPreferredSize(buttonSize);
         addSectionsButton.setPreferredSize(buttonSize);
@@ -208,7 +211,7 @@ public class CourseRegistrationGUI extends JFrame {
         acButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                deleteCoursesInWorkListPanel();
+                deleteCoursesInWorkListPanel();
             }
         });
     }
@@ -232,6 +235,30 @@ public class CourseRegistrationGUI extends JFrame {
                 addSectionsInWorkListPanel();
             }
         });
+    }
+
+    // MODIFIES: this
+    // EFFECTS: shows a panel that can let the user type in course subject, course number and section number of a course
+    // the user wants to delete from the course workList.
+    private void deleteCoursesInWorkListPanel() {
+        JPanel addACoursePanel = new JPanel();
+        addACoursePanel.setLayout(new GridLayout(3, 2));
+        JLabel subjectLabel = new JLabel("Course Subject: ");
+        deleteSubjectField = new JTextField(20);
+        addACoursePanel.add(subjectLabel);
+        addACoursePanel.add(deleteSubjectField);
+        JLabel courseNumberLabel = new JLabel("Course Number: ");
+        deleteCourseNumberField = new JTextField(20);
+        addACoursePanel.add(courseNumberLabel);
+        addACoursePanel.add(deleteCourseNumberField);
+        JLabel sectionLabel = new JLabel("Section Number: ");
+        deleteSectionField = new JTextField(20);
+        addACoursePanel.add(sectionLabel);
+        addACoursePanel.add(deleteSectionField);
+        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
+                "Delete a course section", JOptionPane.OK_CANCEL_OPTION);
+        deleteSectionsSaving(result);
+
     }
 
     // MODIFIES: this
@@ -272,6 +299,54 @@ public class CourseRegistrationGUI extends JFrame {
         int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
                 "Add a section", JOptionPane.OK_CANCEL_OPTION);
         addSectionsSaving(result);
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: delete a section from the userStudent's course workList
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
+    // if the user doesn't have such a course in course work list, remind user by popping a message
+    private void deleteSectionsSaving(int result) {
+        if (result == JOptionPane.OK_OPTION) {
+            String subject = deleteSubjectField.getText().trim();
+            String courseNumberStr = deleteCourseNumberField.getText().trim();
+            int sectionNumber = Integer.parseInt(deleteSectionField.getText().trim());
+            if (!courseNumberStr.isEmpty()) {
+                try {
+                    int courseNumber = Integer.parseInt(courseNumberStr);
+                    deleteSection(subject, sectionNumber, courseNumber);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter a valid course number.",
+                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Course number cannot be empty.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        updatePanelInWorkList();
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: delete a section from the userStudent's course workList
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a error,
+    // if the user doesn't have a such course to course work list, remind user by popping a error,
+    // if the user doesn't have a given such in his course workList, remind user by popping a error.
+    private void deleteSection(String subject, int sectionNumber, int courseNumber) {
+        if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else if (userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber)) {
+            userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Your work list doesn't contain this section.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
@@ -356,8 +431,6 @@ public class CourseRegistrationGUI extends JFrame {
             userStudent.addANewSectionToWorkList(subject, courseNumber, sectionNumber);
         }
     }
-
-
 
 
     // EFFECTS: update the panel that shows the course details of each course in course workList
