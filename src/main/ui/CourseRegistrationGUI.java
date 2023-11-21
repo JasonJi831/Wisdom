@@ -41,6 +41,7 @@ public class CourseRegistrationGUI extends JFrame {
     private JScrollPane scrollPane;
     private JPanel infoPanel;
     private JPanel topBarPanel;
+    private JPanel buttonPanel;
 
     // field for saving and loading
     private static final String JSON_STORE = "./data/student.json";
@@ -68,8 +69,9 @@ public class CourseRegistrationGUI extends JFrame {
         infoPanel.setPreferredSize(new Dimension(600, 300));
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
         String[][] emptyArray = {};
-        showCourseWorkList(infoPanel, emptyArray);
+        showCourseInWorkList(infoPanel, emptyArray);
         backgroundPanel.add(infoPanel);
+
     }
 
     // MODIFIES: this
@@ -91,7 +93,6 @@ public class CourseRegistrationGUI extends JFrame {
         });
     }
 
-
     // MODIFIES: this
     // EFFECTS: saves the course work list and registered list to the file.
     private void saveBothLists() {
@@ -107,7 +108,6 @@ public class CourseRegistrationGUI extends JFrame {
         }
     }
 
-
     // MODIFIES: this
     // EFFECTS: initials and set up all elements of the JFrame window
     private void setupBackground() {
@@ -119,7 +119,6 @@ public class CourseRegistrationGUI extends JFrame {
         addBackGround();
         loadHistory();
     }
-
 
     // EFFECTS: adds the background of panel
     private void addBackGround() {
@@ -178,12 +177,11 @@ public class CourseRegistrationGUI extends JFrame {
         topBarPanel.revalidate();
         topBarPanel.repaint();
         menuBar();
-        addCoursesButton();
     }
 
-    // EFFECTS: add two buttons that can prompt the user to add courses or add sections the course workList.
-    private void addCoursesButton() {
-        JPanel buttonPanel = new JPanel();
+    // EFFECTS: add three buttons that can prompt the user to add courses or add sections the course workList.
+    private void buttonsForWorkList() {
+        buttonPanel.removeAll();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JButton addCoursesButton = new JButton("add courses");
         JButton addSectionsButton = new JButton("add a section");
@@ -200,11 +198,55 @@ public class CourseRegistrationGUI extends JFrame {
         buttonPanel.add(addSectionsButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
         addListenerToAddCoursesButton(addCoursesButton);
         addListenerToAddSectionsButton(addSectionsButton);
         addListenerToDeleteCoursesButton(deleteButton);
 
     }
+
+    // EFFECTS: add two buttons that can prompt the user to add courses or add sections the reg workList.
+    private void buttonsForRegList() {
+        buttonPanel.removeAll();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JButton registerCoursesButton = new JButton("register courses");
+        JButton dropCoursesButton = new JButton("drop courses");
+        Dimension buttonSize = new Dimension(240, 86);
+        Font buttonFont = new Font("Arial", Font.BOLD, 18);
+        registerCoursesButton.setPreferredSize(buttonSize);
+        dropCoursesButton.setPreferredSize(buttonSize);
+        registerCoursesButton.setFont(buttonFont);
+        dropCoursesButton.setFont(buttonFont);
+        buttonPanel.add(registerCoursesButton);
+        buttonPanel.add(dropCoursesButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
+        addListenerToRegisterCoursesButton(registerCoursesButton);
+        addListenerToDropCoursesButton(dropCoursesButton);
+    }
+
+    // EFFECTS: add a listener to the button "register courses"
+    private void addListenerToRegisterCoursesButton(JButton registerCoursesButton) {
+        registerCoursesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                CoursesInWorkListPanel();
+            }
+        });
+    }
+
+    // EFFECTS: add a listener to the button "drop courses"
+    private void addListenerToDropCoursesButton(JButton dropCoursesButton) {
+        dropCoursesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                addCoursesInWorkListPanel();
+            }
+        });
+    }
+
 
     // EFFECTS: add a listener to the button "add courses"
     private void addListenerToDeleteCoursesButton(JButton acButton) {
@@ -435,11 +477,11 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: update the panel that shows the course details of each course in course workList
     private void updatePanelInWorkList() {
+
         infoPanel.remove(scrollPane); // Remove the old scrollPane.
         List<Course> courseListInWorkList = userStudent.getWorkList();
         String[][] courseData = getWorkListData(courseListInWorkList);
-        showCourseWorkList(infoPanel, courseData);
-//        add(infoPanel, BorderLayout.CENTER);
+        showCourseInWorkList(infoPanel, courseData);
         infoPanel.revalidate();
         infoPanel.repaint();
         add(infoPanel);
@@ -449,7 +491,7 @@ public class CourseRegistrationGUI extends JFrame {
     }
 
     // EFFECTS: show the data on the panel
-    private void showCourseWorkList(JPanel infoPanel, String[][] courseData) {
+    private void showCourseInWorkList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
         Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
         String[] columnNames = {"Subject", "Course No.", "Section No."};
@@ -481,10 +523,45 @@ public class CourseRegistrationGUI extends JFrame {
     }
 
 
+    // EFFECTS: show the data on the panel
+    private void showCourseInRegList(JPanel infoPanel, String[][] courseData) {
+        remove(infoPanel);
+        Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
+        String[] columnNames = {"Subject", "Course No.", "Section No."};
+        Object[][] data = courseData;
+        JTable courseTable = new JTable(data, columnNames);
+        courseTable.setEnabled(false);
+        courseTable.getTableHeader().setFont(headerFont);
+        scrollPane = new JScrollPane(courseTable);
+        scrollPane.setPreferredSize(new Dimension(600, 300));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        infoPanel.add(scrollPane);
+
+    }
+
+    // EFFECTS: returns String[][] orderListData according to the current state of myRestaurant
+    private String[][] getRegListData(List<Course> courseList) {
+        String[][] courseData = new String[courseList.size()][4];
+        for (int i = 0; i < courseList.size(); i++) {
+            Course c = courseList.get(i);
+            courseData[i][0] = c.getSubject();
+            courseData[i][1] = String.valueOf(c.getCourseNumber());
+            List<Integer> sectionNumbers = c.getAllSections();
+            courseData[i][2] = sectionNumbers.stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+        }
+        return courseData;
+    }
+
+
     // EFFECTS: creates a menuBar called options
     private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
         menu = new JMenu("Options");
+        buttonPanel = new JPanel();
+        buttonsForWorkList();
         courseWorkListListener();
         courseRegisteredListener();
         menuBar.add(menu);
@@ -496,11 +573,13 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: creates the listener for the course workList "item"
     private void courseWorkListListener() {
+//        buttonsForWorkList();
         JMenuItem courseWorkListItem = new JMenuItem("Course WorkList");
         courseWorkListItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updatePanelInWorkList();
+                buttonsForWorkList();
             }
         });
         menu.add(courseWorkListItem);
@@ -508,15 +587,30 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: creates the listener for the course registered "item"
     private void courseRegisteredListener() {
-
+//        buttonsForRegList();
         JMenuItem registeredListItem = new JMenuItem("Registered List");
         registeredListItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                showRegisteredList();
+                updatePanelInRegisteredList();
+                buttonsForRegList();
+
             }
         });
         menu.add(registeredListItem);
+    }
+
+    // EFFECTS: update the panel that shows the course details of each course in course registered list
+    private void updatePanelInRegisteredList() {
+        infoPanel.remove(scrollPane);
+        List<Course> courseListInRegList = userStudent.getRegistereddList();
+        String[][] courseData = getRegListData(courseListInRegList);
+        showCourseInRegList(infoPanel, courseData);
+        infoPanel.revalidate();
+        infoPanel.repaint();
+        add(infoPanel);
+        revalidate();
+        repaint();
     }
 
 
