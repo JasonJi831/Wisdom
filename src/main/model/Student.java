@@ -97,7 +97,6 @@ public class Student implements Writable {
     }
 
 
-
     // REQUIRES: course number > 0, and section number > 0.
     // MODIFIES: this
     // EFFECTS: adds a course section to the course work list with corresponding course subject,
@@ -148,6 +147,7 @@ public class Student implements Writable {
         addedCcourse.addSection(sectionNumber);
         registeredList.add(addedCcourse);
     }
+
 
     // EFFECTS: returns a list of all courses in the course work list, including their course subject and number, a
     // s strings (ex: "CPSC210").
@@ -223,6 +223,21 @@ public class Student implements Writable {
     }
 
 
+    // REQUIRES: course number > 0, section > 0, registered List contains such a course with same course subject and
+    // numbers as given.
+    // MODIFIES: this
+    // EFFECTS: returns true if the course in the registeredList with the same course subject and number contains such
+    // section, false otherwise.
+    public Boolean whetherContainSuchSectionInRegList(String courseSubject, int courseNumber, int section) {
+        for (Course c : registeredList) {
+            while (c.sameCourse(courseSubject, courseNumber)) {
+                return c.getAllSections().contains(section);
+            }
+        }
+        return false;
+    }
+
+
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS: removes a specific course section from the course work list based on the provided course name,
@@ -254,6 +269,24 @@ public class Student implements Writable {
         }
         return false;
 
+    }
+
+
+    // REQUIRES: course number > 0, section > 0
+    // MODIFIES: this
+    // EFFECTS:  removes all sections from the course registered list based on the provided course name,
+    // course number, and section, and then, remove this course from the course registered List.
+    public void removeAllSections(String subjectName, int courseNumber) {
+        if (!this.registeredList.isEmpty()) {
+            Iterator<Course> iterator = this.registeredList.iterator();
+            while (iterator.hasNext()) {
+                Course c = iterator.next();
+                if (c.sameCourse(subjectName, courseNumber)) {
+                    c.getAllSections().clear(); // Assuming this is a method that returns a list of sections
+                    iterator.remove(); // Use the iterator's remove method
+                }
+            }
+        }
     }
 
 

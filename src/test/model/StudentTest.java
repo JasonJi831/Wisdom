@@ -16,8 +16,6 @@ public class StudentTest {
     @BeforeEach
     void runBefore() {
         testStudent = new Student("Jason", 12345678);
-        testCourse1 = new Course("CPSC", 210);
-        testCourse2 = new Course("ECON", 345);
 
     }
 
@@ -166,6 +164,7 @@ public class StudentTest {
         assertEquals(102, testSectionList.get(1));
 
     }
+
 
     @Test
     void testRegisterCourseByOnce() {
@@ -325,6 +324,18 @@ public class StudentTest {
     }
 
 
+    @Test
+    void testWhetherContainSuchSectionInRegList() {
+        assertFalse(testStudent.whetherContainSuchSectionInRegList("CPSC",210,101));
+        testStudent.registerCourse("CPSC", 210 ,101);
+        assertTrue(testStudent.whetherContainSuchSectionInRegList("CPSC",210,101));
+        assertFalse(testStudent.whetherContainSuchSectionInRegList("CPSC",210,102));
+        assertFalse(testStudent.whetherContainSuchSectionInRegList("ECON",210,101));
+        assertFalse(testStudent.whetherContainSuchSectionInRegList("CPSC",211,101));
+
+    }
+
+
 
     @Test
     void testDeleteOneCourseSectionByTwice() {
@@ -343,7 +354,17 @@ public class StudentTest {
                 210);
         assertEquals(0, allSection2.size());
 
+    }
 
+    @Test
+    void testRemoveAllSections() {
+        testStudent.removeAllSections("CPSC",210);
+        assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC", 210));
+        testStudent.registerCourse("CPSC", 210, 101);
+        assertFalse(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
+                210).isEmpty());
+        testStudent.removeAllSections("CPSC",210);
+        assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",210));
     }
 
 

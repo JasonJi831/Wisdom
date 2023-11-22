@@ -44,6 +44,40 @@ saved work list and course registration list from where I left off at the last t
 
 
 
+## Instructions for Grader
+
+- You can generate the first required action related to the user story "adding multiple Xs to a Y" by navigating to the 
+"Options" menu at the top of the application, selecting "Course WorkList", and then clicking the "add courses" button
+in the bottom panel.
+
+
+- You can generate the second required action related to the user story "adding multiple Xs to a Y" by navigating to the
+  "Options" menu at the top of the application, selecting "Registered List", and then clicking the "register courses"
+  button in the bottom panel.
+
+
+- You can generate the third action related to the user story "adding multiple Xs to a Y" by navigating to the
+  "Options" menu at the top of the application, selecting "Course WorkList", and then clicking the "add a section"
+  button in the bottom panel.
+
+
+- You can locate my visual component, which is an image of the UBC badge, upon starting the GUI. 
+It is displayed at the center of the login panel background.
+
+
+- You can save the state of my application by attempting to close the window, 
+which will trigger a prompt asking if you wish to save the current course work list and registered list. Clicking 
+"For sure!" will save the state to a file.
+
+
+- You can reload the state of my application by restarting the application after it has been closed. 
+Upon restart, you will be prompted with the option to load the previous state. Clicking "For sure!" will load the state 
+from the file.
+
+
+
+
+
 
 
 

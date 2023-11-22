@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CourseRegistrationGUI extends JFrame {
+    private JFrame registrationFrame;
     private JTextField nameField;
     private JTextField studentIdField;
     private JTextField courseNumberField;
@@ -32,10 +33,14 @@ public class CourseRegistrationGUI extends JFrame {
     private JTextField deleteSubjectField;
     private JTextField deleteCourseNumberField;
     private JTextField deleteSectionField;
+    private JTextField subjectFieldReg;
+    private JTextField courseNumberFieldReg;
+    private JTextField sectionFieldReg;
+    private JTextField dropSubjectField;
+    private JTextField dropCourseNumberField;
 
     private JPanel loginPanel;
     private JPanel loginButtonPanel;
-    private JLabel statusLabel;
     private JPanel backgroundPanel;
     private JMenu menu;
     private JScrollPane scrollPane;
@@ -127,7 +132,7 @@ public class CourseRegistrationGUI extends JFrame {
             BufferedImage resizedBackground = resize(originalBackground, 100, 100);
             ImageIcon feastAppImage = new ImageIcon(resizedBackground);
             JLabel imageLabel = new JLabel(feastAppImage);
-            imageLabel.setBounds(120, 30, 300, 200);
+            imageLabel.setBounds(150, 30, 300, 200);
             backgroundPanel.add(imageLabel, BorderLayout.CENTER);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
@@ -232,7 +237,7 @@ public class CourseRegistrationGUI extends JFrame {
         registerCoursesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                CoursesInWorkListPanel();
+                registerCoursesInRegListPanel();
             }
         });
     }
@@ -242,7 +247,7 @@ public class CourseRegistrationGUI extends JFrame {
         dropCoursesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                addCoursesInWorkListPanel();
+                dropCoursesInRegListPanel();
             }
         });
     }
@@ -280,6 +285,186 @@ public class CourseRegistrationGUI extends JFrame {
     }
 
     // MODIFIES: this
+    // EFFECTS: shows a panel that can let the user type in course subject and course number of a course
+    // the user wants to drop from the course registered List.
+    private void dropCoursesInRegListPanel() {
+        JPanel dropACoursePanel = new JPanel();
+        dropACoursePanel.setLayout(new GridLayout(2, 2));
+        JLabel subjectLabel = new JLabel("Course Subject: ");
+        dropSubjectField = new JTextField(20);
+        dropACoursePanel.add(subjectLabel);
+        dropACoursePanel.add(dropSubjectField);
+        JLabel courseNumberLabel = new JLabel("Course Number: ");
+        dropCourseNumberField = new JTextField(20);
+        dropACoursePanel.add(courseNumberLabel);
+        dropACoursePanel.add(dropCourseNumberField);
+        int result = JOptionPane.showConfirmDialog(null, dropACoursePanel,
+                "Delete a course section", JOptionPane.OK_CANCEL_OPTION);
+        dropCoursesSaving(result);
+
+    }
+
+    // MODIFIES: this
+    // EFFECTS: drop a course from the userStudent's course registered list,
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
+    // if the user doesn't have such a course in course registered list, remind user by popping a message.
+    private void dropCoursesSaving(int result) {
+        if (result == JOptionPane.OK_OPTION) {
+            String subject = dropSubjectField.getText().trim();
+            String courseNumberStr = dropCourseNumberField.getText().trim();
+            if (!courseNumberStr.isEmpty()) {
+                try {
+                    int courseNumber = Integer.parseInt(courseNumberStr);
+                    dropCourses(subject, courseNumber);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null,
+                            "Please enter a valid course number.",
+                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Course number cannot be empty.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        updatePanelInRegisteredList();
+
+    }
+
+
+    // EFFECTS: drop a course from the registered list panel, popping notification if user types a course
+    // which has not existed in the course registered list
+    private void dropCourses(String subject, int courseNumber) {
+        if (!userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            userStudent.removeAllSections(subject, courseNumber);
+        }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: shows a window that can let the user type in the info of a course which user wants to register.
+    private void registerCoursesInRegListPanel() {
+        registrationFrame = new JFrame("Course Registration");
+        registrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        registrationFrame.setLayout(new BoxLayout(registrationFrame.getContentPane(), BoxLayout.Y_AXIS));
+        infoPanel.remove(scrollPane);
+        List<Course> courseListInWorkList = userStudent.getWorkList();
+        String[][] courseData = getWorkListData(courseListInWorkList);
+        showCourseInWorkList(infoPanel, courseData);
+        infoPanel.revalidate();
+        infoPanel.repaint();
+        scrollPane.setPreferredSize(new Dimension(400, 200));
+        addAnInstructionForRegister();
+        JPanel inputPanel = registerCoursePanelHelper();
+        JPanel buttonPanel = new JPanel();
+        JButton registerButton = new JButton("Register");
+        addListenerToRegisterButton(registerButton);
+        buttonPanel.add(registerButton);
+        registrationFrame.add(scrollPane);
+        registrationFrame.add(inputPanel);
+        registrationFrame.add(buttonPanel);
+        registrationFrame.pack();
+        registrationFrame.setLocationRelativeTo(null);
+        registrationFrame.setVisible(true);
+    }
+
+    // EFFECTS: creates an instruction for registering a course.
+    private void addAnInstructionForRegister() {
+        JLabel instructionLabel1 = new JLabel("To register for a course from your coursework list shown below, ");
+        JLabel instructionLabel2 = new JLabel(" please type the course information into the following boxes.");
+        instructionLabel1.setFont(new Font("Arial", Font.CENTER_BASELINE, 16));
+        instructionLabel2.setFont(new Font("Arial", Font.CENTER_BASELINE, 16));
+        instructionLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        registrationFrame.add(instructionLabel1);
+        registrationFrame.add(instructionLabel2);
+    }
+
+    // EFFECTS: creates a panel to help user register a course, the user needs to type the subject, course number and
+    // section number.
+    private JPanel registerCoursePanelHelper() {
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(3, 2));
+        JLabel subjectLabel = new JLabel("Subject:");
+        JLabel courseNoLabel = new JLabel("Course Number: ");
+        JLabel sectionNoLabel = new JLabel("Section Number: ");
+        subjectFieldReg = new JTextField();
+        courseNumberFieldReg = new JTextField();
+        sectionFieldReg = new JTextField();
+        inputPanel.add(subjectLabel);
+        inputPanel.add(subjectFieldReg);
+        inputPanel.add(courseNoLabel);
+        inputPanel.add(courseNumberFieldReg);
+        inputPanel.add(sectionNoLabel);
+        inputPanel.add(sectionFieldReg);
+        return inputPanel;
+    }
+
+    // EFFECTS; add a listener to the button "register"
+    private void addListenerToRegisterButton(JButton registerButton) {
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                registerCoursesSaving();
+            }
+        });
+    }
+
+    // MODIFIES: this
+    // EFFECTS: add a section to the userStudent's course workList
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
+    // if the user has been added such a course to course work list, remind user by popping a message
+    private void registerCoursesSaving() {
+        String subject = subjectFieldReg.getText().trim();
+        String courseNumberStr = courseNumberFieldReg.getText().trim();
+        int sectionNumber = Integer.parseInt(sectionFieldReg.getText().trim());
+        if (!courseNumberStr.isEmpty()) {
+            try {
+                int courseNumber = Integer.parseInt(courseNumberStr);
+                registerSections(subject, courseNumber, sectionNumber);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Please enter a valid course number.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Course number cannot be empty.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+        updatePanelInRegisteredList();
+        registrationFrame.dispose();
+
+    }
+
+    // EFFECTS: add a section to the registered list panel, popping notification if user types a course
+    // which has not existed in the course work list or the section this user wants to
+    // add has already been added to the panel.
+    private void registerSections(String subject, int courseNumber, int sectionNumber) {
+        if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else if (userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "You have already registered" + subject + courseNumber + " before!! ",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!userStudent.showAllSectionOfThisCourseInWorkList(subject, courseNumber).contains(sectionNumber)) {
+            JOptionPane.showMessageDialog(null,
+                    "You have not add " + subject + courseNumber + "-" + sectionNumber + " to your "
+                            + "course workList list before!! ",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            userStudent.registerCourse(subject, courseNumber, sectionNumber);
+        }
+    }
+
+
+    // MODIFIES: this
     // EFFECTS: shows a panel that can let the user type in course subject, course number and section number of a course
     // the user wants to delete from the course workList.
     private void deleteCoursesInWorkListPanel() {
@@ -304,7 +489,7 @@ public class CourseRegistrationGUI extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: shows a panel that can let the user type in the course subject and course number.
+    // EFFECTS: shows a panel that can let the user type in the course subject and course number for adding a course.
     private void addCoursesInWorkListPanel() {
         JPanel addACoursePanel = new JPanel();
         addACoursePanel.setLayout(new GridLayout(2, 2));
@@ -382,15 +567,14 @@ public class CourseRegistrationGUI extends JFrame {
             JOptionPane.showMessageDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
                     "Input Error", JOptionPane.ERROR_MESSAGE);
-        } else if (userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber)) {
-            userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
-        } else {
+        } else if (!userStudent.whetherContainSuchSectionInRegList(subject, courseNumber, sectionNumber)) {
             JOptionPane.showMessageDialog(null,
                     "Your work list doesn't contain this section.", "Input Error",
                     JOptionPane.ERROR_MESSAGE);
+        } else {
+            userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
         }
     }
-
 
     // MODIFIES: this
     // EFFECTS: add a section to the userStudent's course workList
@@ -477,7 +661,6 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: update the panel that shows the course details of each course in course workList
     private void updatePanelInWorkList() {
-
         infoPanel.remove(scrollPane); // Remove the old scrollPane.
         List<Course> courseListInWorkList = userStudent.getWorkList();
         String[][] courseData = getWorkListData(courseListInWorkList);
@@ -487,7 +670,6 @@ public class CourseRegistrationGUI extends JFrame {
         add(infoPanel);
         revalidate();
         repaint();
-
     }
 
     // EFFECTS: show the data on the panel
@@ -659,18 +841,27 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: prompts the user to choose whether they want to load the history data.
     private void loadHistory() {
-        statusLabel = new JLabel("Do you want to load the previous course work list and the registered "
-                + "list from the file?", SwingConstants.CENTER);
+        Font buttonFont = new Font("Arial", Font.BOLD, 16);
+        JLabel statusLabel1 = new JLabel("Do you want to load the previous"
+                + " course workList ", SwingConstants.CENTER);
+        JLabel statusLabel2 = new JLabel("and the registered list from the file?", SwingConstants.CENTER);
         JButton btnYes = new JButton("For sure!");
         JButton btnNo = new JButton("Start a new one!");
-        btnYes.setBounds(100, 190, 150, 40);
-        btnNo.setBounds(280, 190, 150, 40);
-        statusLabel.setBounds(-20, 50, 600, 40);
-        backgroundPanel.add(statusLabel, BorderLayout.CENTER);
+        btnYes.setFont(buttonFont);
+        btnNo.setFont(buttonFont);
+        statusLabel1.setFont(new Font("Arial", Font.CENTER_BASELINE, 20));
+        statusLabel2.setFont(new Font("Arial", Font.CENTER_BASELINE, 20));
+        btnYes.setBounds(125, 190, 150, 40);
+        btnNo.setBounds(325, 190, 150, 40);
+        statusLabel1.setBounds(0, 10, 600, 50);
+        statusLabel2.setBounds(0, 35, 600, 50);
+        backgroundPanel.add(statusLabel1, BorderLayout.CENTER);
+        backgroundPanel.add(statusLabel2, BorderLayout.CENTER);
         backgroundPanel.add(btnYes);
         backgroundPanel.add(btnNo);
         addListenerToButtonYes(btnYes);
         addListenerToButtonNo(btnNo);
+        setLocationRelativeTo(null);
     }
 
     // EFFECTS: add a listener to the button "Yes"
