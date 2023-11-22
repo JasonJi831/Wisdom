@@ -323,6 +323,18 @@ public class StudentTest {
 
     }
 
+    @Test
+    void testWhetherContainSuchSectionInWorkList() {
+        assertFalse(testStudent.whetherContainSuchSectionInWorkList("CPSC",210,101));
+        testStudent.addACourseToWorkList("CPSC",210);
+        testStudent.addANewSectionToWorkList("CPSC",210, 101);
+        assertTrue(testStudent.whetherContainSuchSectionInWorkList("CPSC",210,101));
+        assertFalse(testStudent.whetherContainSuchSectionInWorkList("CPSC",210,102));
+        assertFalse(testStudent.whetherContainSuchSectionInWorkList("ECON",210,101));
+        assertFalse(testStudent.whetherContainSuchSectionInWorkList("CPSC",211,101));
+
+    }
+
 
     @Test
     void testWhetherContainSuchSectionInRegList() {
@@ -332,7 +344,6 @@ public class StudentTest {
         assertFalse(testStudent.whetherContainSuchSectionInRegList("CPSC",210,102));
         assertFalse(testStudent.whetherContainSuchSectionInRegList("ECON",210,101));
         assertFalse(testStudent.whetherContainSuchSectionInRegList("CPSC",211,101));
-
     }
 
 

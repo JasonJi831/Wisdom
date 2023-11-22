@@ -55,7 +55,6 @@ public class CourseRegistrationGUI extends JFrame {
     private JsonReader jsonReader;
     private Student userStudent;
 
-
     // EFFECTS: Show the login page of the course registration system
     public CourseRegistrationGUI() {
         super("Course Registration System");
@@ -86,9 +85,16 @@ public class CourseRegistrationGUI extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int result = JOptionPane.showConfirmDialog(null,
-                        "Do you want to save the current" + " course work list and registered list?",
-                        "Save or not", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                Object[] options = { "Yes", "No", "Cancel" };
+                int result = JOptionPane.showOptionDialog(null,
+                        "Do you want to save the current course work list and registered list?",
+                        "Save or not",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,     // do not use a custom Icon
+                        options,  // the titles of buttons
+                        options[0]); // default button title
+
                 if (result == JOptionPane.YES_OPTION) {
                     saveBothLists();
                     dispose();
@@ -299,10 +305,25 @@ public class CourseRegistrationGUI extends JFrame {
         dropCourseNumberField = new JTextField(20);
         dropACoursePanel.add(courseNumberLabel);
         dropACoursePanel.add(dropCourseNumberField);
-        int result = JOptionPane.showConfirmDialog(null, dropACoursePanel,
-                "Delete a course section", JOptionPane.OK_CANCEL_OPTION);
+        Object[] options = { "Confirm", "Cancel" };
+        int result = JOptionPane.showOptionDialog(null, dropACoursePanel,
+                "Drop a course", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         dropCoursesSaving(result);
+    }
 
+
+    // Helper method to create styled buttons
+    private JButton createStyledButton(String text, Color bgColor, Color textColor) {
+        JButton button = new JButton(text);
+        button.setBackground(bgColor);
+        button.setForeground(textColor);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
     }
 
     // MODIFIES: this
@@ -329,7 +350,6 @@ public class CourseRegistrationGUI extends JFrame {
             }
         }
         updatePanelInRegisteredList();
-
     }
 
 
@@ -345,7 +365,6 @@ public class CourseRegistrationGUI extends JFrame {
         }
     }
 
-
     // MODIFIES: this
     // EFFECTS: shows a window that can let the user type in the info of a course which user wants to register.
     private void registerCoursesInRegListPanel() {
@@ -358,11 +377,11 @@ public class CourseRegistrationGUI extends JFrame {
         showCourseInWorkList(infoPanel, courseData);
         infoPanel.revalidate();
         infoPanel.repaint();
-        scrollPane.setPreferredSize(new Dimension(400, 200));
+        scrollPane.setPreferredSize(new Dimension(500, 250));
         addAnInstructionForRegister();
         JPanel inputPanel = registerCoursePanelHelper();
         JPanel buttonPanel = new JPanel();
-        JButton registerButton = new JButton("Register");
+        JButton registerButton = getRegisterButton();
         addListenerToRegisterButton(registerButton);
         buttonPanel.add(registerButton);
         registrationFrame.add(scrollPane);
@@ -373,9 +392,32 @@ public class CourseRegistrationGUI extends JFrame {
         registrationFrame.setVisible(true);
     }
 
+    // EFFECTS: creates a register button with good looking style.
+    private static JButton getRegisterButton() {
+        JButton registerButton = new JButton("Register");
+        registerButton.setFont(new Font("Segoe UI", Font.BOLD, 18)); // Set a custom font
+        registerButton.setForeground(Color.WHITE); // Set the text color to white
+        registerButton.setBackground(new Color(0, 123, 255)); // A nice blue color
+        registerButton.setOpaque(true);
+        registerButton.setBorderPainted(false); // Turn off the border painting for a flat look
+        registerButton.setFocusPainted(false); // Remove the focus indicator (optional)
+        registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change the cursor to a hand on hover
+        registerButton.setMargin(new Insets(5, 10, 5, 10));
+        registerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                registerButton.setBackground(new Color(0, 101, 204)); // Darker blue when hovering
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                registerButton.setBackground(new Color(0, 123, 255)); // Original color when not hovering
+            }
+        });
+        return registerButton;
+    }
+
     // EFFECTS: creates an instruction for registering a course.
     private void addAnInstructionForRegister() {
-        JLabel instructionLabel1 = new JLabel("To register for a course from your coursework list shown below, ");
+        JLabel instructionLabel1 = new JLabel("To register a course from your course work list shown below, ");
         JLabel instructionLabel2 = new JLabel(" please type the course information into the following boxes.");
         instructionLabel1.setFont(new Font("Arial", Font.CENTER_BASELINE, 16));
         instructionLabel2.setFont(new Font("Arial", Font.CENTER_BASELINE, 16));
@@ -447,23 +489,28 @@ public class CourseRegistrationGUI extends JFrame {
     // add has already been added to the panel.
     private void registerSections(String subject, int courseNumber, int sectionNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else if (userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "You have already registered" + subject + courseNumber + " before!! ",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else if (!userStudent.showAllSectionOfThisCourseInWorkList(subject, courseNumber).contains(sectionNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "You have not add " + subject + courseNumber + "-" + sectionNumber + " to your "
                             + "course workList list before!! ",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else {
             userStudent.registerCourse(subject, courseNumber, sectionNumber);
         }
     }
-
 
     // MODIFIES: this
     // EFFECTS: shows a panel that can let the user type in course subject, course number and section number of a course
@@ -483,11 +530,13 @@ public class CourseRegistrationGUI extends JFrame {
         deleteSectionField = new JTextField(20);
         addACoursePanel.add(sectionLabel);
         addACoursePanel.add(deleteSectionField);
-        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
-                "Delete a course section", JOptionPane.OK_CANCEL_OPTION);
+        Object[] options = { "Confirm", "Cancel" };
+        int result = JOptionPane.showOptionDialog(null, addACoursePanel,
+                "delete a course section", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         deleteSectionsSaving(result);
-
     }
+
 
     // MODIFIES: this
     // EFFECTS: shows a panel that can let the user type in the course subject and course number for adding a course.
@@ -502,8 +551,10 @@ public class CourseRegistrationGUI extends JFrame {
         courseNumberField = new JTextField(20);
         addACoursePanel.add(courseNumberLabel);
         addACoursePanel.add(courseNumberField);
-        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
-                "Add a course", JOptionPane.OK_CANCEL_OPTION);
+        Object[] options = { "Confirm", "Cancel" };
+        int result = JOptionPane.showOptionDialog(null, addACoursePanel,
+                "Add a course section", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         addCoursesSaving(result);
     }
 
@@ -524,8 +575,10 @@ public class CourseRegistrationGUI extends JFrame {
         sectionField = new JTextField(20);
         addACoursePanel.add(sectionLabel);
         addACoursePanel.add(sectionField);
-        int result = JOptionPane.showConfirmDialog(null, addACoursePanel,
-                "Add a section", JOptionPane.OK_CANCEL_OPTION);
+        Object[] options = { "Confirm", "Cancel" };
+        int result = JOptionPane.showOptionDialog(null, addACoursePanel,
+                "Add a course section", JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         addSectionsSaving(result);
     }
 
@@ -568,7 +621,7 @@ public class CourseRegistrationGUI extends JFrame {
             JOptionPane.showMessageDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
                     "Input Error", JOptionPane.ERROR_MESSAGE);
-        } else if (!userStudent.whetherContainSuchSectionInRegList(subject, courseNumber, sectionNumber)) {
+        } else if (!userStudent.whetherContainSuchSectionInWorkList(subject, courseNumber, sectionNumber)) {
             JOptionPane.showMessageDialog(null,
                     "Your work list doesn't contain this section.", "Input Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -720,15 +773,27 @@ public class CourseRegistrationGUI extends JFrame {
     // EFFECTS: show the data on the panel
     private void showCourseInRegList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
-        Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
+        Font headerFont = new Font("Segoe UI", Font.BOLD, 18);
         String[] columnNames = {"Subject", "Course No.", "Section No."};
         JTable courseTable = new JTable(courseData, columnNames);
         courseTable.setEnabled(false);
-        courseTable.getTableHeader().setFont(headerFont);
+        JTableHeader tableHeader = courseTable.getTableHeader();
+        tableHeader.setFont(headerFont);
+        tableHeader.setBackground(new Color(44, 121, 210, 255));
+        tableHeader.setForeground(Color.WHITE);
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setPreferredSize(new Dimension(100, 36));
+        courseTable.setRowHeight(24);
+        courseTable.setShowHorizontalLines(true);
+        courseTable.setShowVerticalLines(true);
+        courseTable.setGridColor(new Color(200, 200, 200));
+        courseTable.setSelectionBackground(new Color(204, 229, 255));
         scrollPane = new JScrollPane(courseTable);
         scrollPane.setPreferredSize(new Dimension(600, 300));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         infoPanel.add(scrollPane);
+        infoPanel.revalidate();
+        infoPanel.repaint();
 
     }
 
@@ -753,11 +818,21 @@ public class CourseRegistrationGUI extends JFrame {
     private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
         menu = new JMenu("Options");
+        menu.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        menu.setForeground(Color.WHITE);
+        menu.setBackground(new Color(0, 51, 102));
+        menu.setOpaque(true);
+        menu.setForeground(Color.WHITE);
+        menu.setBackground(new Color(0, 51, 102));
+        menu.setOpaque(true);
         buttonPanel = new JPanel();
         buttonsForWorkList();
         courseWorkListListener();
         courseRegisteredListener();
         menuBar.add(menu);
+        menuBar.setBackground(new Color(0, 51, 102));
+        menuBar.setOpaque(true);
+        menuBar.setBorder(BorderFactory.createRaisedBevelBorder());
         setJMenuBar(menuBar);
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -766,8 +841,12 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: creates the listener for the course workList "item"
     private void courseWorkListListener() {
-//        buttonsForWorkList();
         JMenuItem courseWorkListItem = new JMenuItem("Course WorkList");
+        courseWorkListItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        courseWorkListItem.setBackground(new Color(255, 255, 255));
+        courseWorkListItem.setForeground(new Color(0, 51, 102));
+        courseWorkListItem.setToolTipText("View and manage your list of courses");
+
         courseWorkListItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -780,14 +859,17 @@ public class CourseRegistrationGUI extends JFrame {
 
     // EFFECTS: creates the listener for the course registered "item"
     private void courseRegisteredListener() {
-//        buttonsForRegList();
         JMenuItem registeredListItem = new JMenuItem("Registered List");
+        registeredListItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        registeredListItem.setBackground(new Color(255, 255, 255));
+        registeredListItem.setForeground(new Color(0, 51, 102));
+        registeredListItem.setToolTipText("View your list of registered courses");
+
         registeredListItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updatePanelInRegisteredList();
                 buttonsForRegList();
-
             }
         });
         menu.add(registeredListItem);

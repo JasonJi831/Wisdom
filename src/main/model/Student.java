@@ -228,6 +228,22 @@ public class Student implements Writable {
     // MODIFIES: this
     // EFFECTS: returns true if the course in the registeredList with the same course subject and number contains such
     // section, false otherwise.
+    public Boolean whetherContainSuchSectionInWorkList(String courseSubject, int courseNumber, int section) {
+        for (Course c : workList) {
+            while (c.sameCourse(courseSubject, courseNumber)) {
+                return c.getAllSections().contains(section);
+            }
+        }
+        return false;
+    }
+
+
+
+    // REQUIRES: course number > 0, section > 0, registered List contains such a course with same course subject and
+    // numbers as given.
+    // MODIFIES: this
+    // EFFECTS: returns true if the course in the registeredList with the same course subject and number contains such
+    // section, false otherwise.
     public Boolean whetherContainSuchSectionInRegList(String courseSubject, int courseNumber, int section) {
         for (Course c : registeredList) {
             while (c.sameCourse(courseSubject, courseNumber)) {

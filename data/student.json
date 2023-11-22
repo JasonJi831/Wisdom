@@ -10,6 +10,11 @@
             "section List": [201],
             "subject": "ECON",
             "course number": 101
+        },
+        {
+            "section List": [],
+            "subject": "CPSC",
+            "course number": 110
         }
     ],
     "id": 1,
