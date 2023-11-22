@@ -9,6 +9,7 @@ import persistence.JsonWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -155,7 +156,7 @@ public class CourseRegistrationGUI extends JFrame {
     private void login() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(createLoginPanel(), BorderLayout.CENTER);
-        add(createButtonPanel(null), BorderLayout.SOUTH);
+        add(createButtonPanel(), BorderLayout.SOUTH);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -559,9 +560,9 @@ public class CourseRegistrationGUI extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: delete a section from the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a error,
-    // if the user doesn't have a such course to course work list, remind user by popping a error,
-    // if the user doesn't have a given such in his course workList, remind user by popping a error.
+    // if the user type a valid course number, otherwise, throws NumberFormatException by popping an error,
+    // if the user doesn't have a such course to course work list, remind user by popping an error,
+    // if the user doesn't have a given such in his course workList, remind user by popping an error.
     private void deleteSection(String subject, int sectionNumber, int courseNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
             JOptionPane.showMessageDialog(null,
@@ -675,17 +676,27 @@ public class CourseRegistrationGUI extends JFrame {
     // EFFECTS: show the data on the panel
     private void showCourseInWorkList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
-        Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
+        Font headerFont = new Font("Segoe UI", Font.BOLD, 18);
         String[] columnNames = {"Subject", "Course No.", "Section No."};
-        Object[][] data = courseData;
-        JTable courseTable = new JTable(data, columnNames);
+        JTable courseTable = new JTable(courseData, columnNames);
         courseTable.setEnabled(false);
-        courseTable.getTableHeader().setFont(headerFont);
+        JTableHeader tableHeader = courseTable.getTableHeader();
+        tableHeader.setFont(headerFont);
+        tableHeader.setBackground(new Color(44, 121, 210, 255));
+        tableHeader.setForeground(Color.WHITE);
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setPreferredSize(new Dimension(100, 36));
+        courseTable.setRowHeight(24);
+        courseTable.setShowHorizontalLines(true);
+        courseTable.setShowVerticalLines(true);
+        courseTable.setGridColor(new Color(200, 200, 200));
+        courseTable.setSelectionBackground(new Color(204, 229, 255));
         scrollPane = new JScrollPane(courseTable);
         scrollPane.setPreferredSize(new Dimension(600, 300));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         infoPanel.add(scrollPane);
-
+        infoPanel.revalidate();
+        infoPanel.repaint();
     }
 
     // EFFECTS: returns String[][] orderListData according to the current state of myRestaurant
@@ -710,8 +721,7 @@ public class CourseRegistrationGUI extends JFrame {
         remove(infoPanel);
         Font headerFont = new Font("Segoe UI", Font.BOLD, 16);
         String[] columnNames = {"Subject", "Course No.", "Section No."};
-        Object[][] data = courseData;
-        JTable courseTable = new JTable(data, columnNames);
+        JTable courseTable = new JTable(courseData, columnNames);
         courseTable.setEnabled(false);
         courseTable.getTableHeader().setFont(headerFont);
         scrollPane = new JScrollPane(courseTable);
@@ -809,7 +819,7 @@ public class CourseRegistrationGUI extends JFrame {
     }
 
     // EFFECTS: creates the button "Login" with its own listener.
-    private JPanel createButtonPanel(JFrame frame) {
+    private JPanel createButtonPanel() {
         loginButtonPanel = new JPanel();
         JButton loginButton = new JButton("Login");
         addLoginListener(loginButton);
