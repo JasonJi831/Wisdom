@@ -673,7 +673,8 @@ public class CourseRegistrationGUI extends JFrame {
         repaint();
     }
 
-    // EFFECTS: show the data on the panel
+    // MODIFIES: this
+    // EFFECTS: show the courses information on the panel with the blue header.
     private void showCourseInWorkList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
         Font headerFont = new Font("Segoe UI", Font.BOLD, 18);
@@ -810,10 +811,10 @@ public class CourseRegistrationGUI extends JFrame {
     private JPanel createLoginPanel() {
         loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         loginPanel.add(new JLabel("Name"));
-        nameField = new JTextField(15); // Initialize the name field
+        nameField = new JTextField(15);
         loginPanel.add(nameField);
         loginPanel.add(new JLabel("Student ID"));
-        studentIdField = new JTextField(15); // Initialize the student ID field
+        studentIdField = new JTextField(15);
         loginPanel.add(studentIdField);
         return loginPanel;
     }

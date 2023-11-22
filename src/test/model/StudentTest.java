@@ -363,7 +363,9 @@ public class StudentTest {
         testStudent.registerCourse("CPSC", 210, 101);
         assertFalse(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
                 210).isEmpty());
+        testStudent.removeAllSections("ECON",210);
         testStudent.removeAllSections("CPSC",210);
+        assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("ECON",210));
         assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",210));
     }
 

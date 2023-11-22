@@ -282,8 +282,8 @@ public class Student implements Writable {
             while (iterator.hasNext()) {
                 Course c = iterator.next();
                 if (c.sameCourse(subjectName, courseNumber)) {
-                    c.getAllSections().clear(); // Assuming this is a method that returns a list of sections
-                    iterator.remove(); // Use the iterator's remove method
+                    c.getAllSections().clear();
+                    iterator.remove();
                 }
             }
         }
