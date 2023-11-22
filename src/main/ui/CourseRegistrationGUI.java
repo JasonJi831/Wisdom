@@ -85,7 +85,7 @@ public class CourseRegistrationGUI extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Object[] options = { "Yes", "No", "Cancel" };
+                Object[] options = {"Yes", "No", "Cancel"};
                 int result = JOptionPane.showOptionDialog(null,
                         "Do you want to save the current course work list and registered list?",
                         "Save or not",
@@ -305,7 +305,7 @@ public class CourseRegistrationGUI extends JFrame {
         dropCourseNumberField = new JTextField(20);
         dropACoursePanel.add(courseNumberLabel);
         dropACoursePanel.add(dropCourseNumberField);
-        Object[] options = { "Confirm", "Cancel" };
+        Object[] options = {"Confirm", "Cancel"};
         int result = JOptionPane.showOptionDialog(null, dropACoursePanel,
                 "Drop a course", JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -361,7 +361,7 @@ public class CourseRegistrationGUI extends JFrame {
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
                     "Input Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            userStudent.removeAllSections(subject, courseNumber);
+            userStudent.removeAllSectionsFromRegList(subject, courseNumber);
         }
     }
 
@@ -470,14 +470,19 @@ public class CourseRegistrationGUI extends JFrame {
                 int courseNumber = Integer.parseInt(courseNumberStr);
                 registerSections(subject, courseNumber, sectionNumber);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null,
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(null,
                         "Please enter a valid course number.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                        "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                        null, options, options[0]);
             }
         } else {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+
+            JOptionPane.showOptionDialog(null,
                     "Course number cannot be empty.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         }
         updatePanelInRegisteredList();
         registrationFrame.dispose();
@@ -492,20 +497,20 @@ public class CourseRegistrationGUI extends JFrame {
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
-                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, options[0]);
         } else if (userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(null,
                     "You have already registered" + subject + courseNumber + " before!! ",
-                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, options[0]);
         } else if (!userStudent.showAllSectionOfThisCourseInWorkList(subject, courseNumber).contains(sectionNumber)) {
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(null,
                     "You have not add " + subject + courseNumber + "-" + sectionNumber + " to your "
                             + "course workList list before!! ",
-                    "Input Error", JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE,
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, options[0]);
         } else {
             userStudent.registerCourse(subject, courseNumber, sectionNumber);
@@ -530,7 +535,7 @@ public class CourseRegistrationGUI extends JFrame {
         deleteSectionField = new JTextField(20);
         addACoursePanel.add(sectionLabel);
         addACoursePanel.add(deleteSectionField);
-        Object[] options = { "Confirm", "Cancel" };
+        Object[] options = {"Confirm", "Cancel"};
         int result = JOptionPane.showOptionDialog(null, addACoursePanel,
                 "delete a course section", JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -551,7 +556,7 @@ public class CourseRegistrationGUI extends JFrame {
         courseNumberField = new JTextField(20);
         addACoursePanel.add(courseNumberLabel);
         addACoursePanel.add(courseNumberField);
-        Object[] options = { "Confirm", "Cancel" };
+        Object[] options = {"Confirm", "Cancel"};
         int result = JOptionPane.showOptionDialog(null, addACoursePanel,
                 "Add a course section", JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -575,7 +580,7 @@ public class CourseRegistrationGUI extends JFrame {
         sectionField = new JTextField(20);
         addACoursePanel.add(sectionLabel);
         addACoursePanel.add(sectionField);
-        Object[] options = { "Confirm", "Cancel" };
+        Object[] options = {"Confirm", "Cancel"};
         int result = JOptionPane.showOptionDialog(null, addACoursePanel,
                 "Add a course section", JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -597,14 +602,16 @@ public class CourseRegistrationGUI extends JFrame {
                     int courseNumber = Integer.parseInt(courseNumberStr);
                     deleteSection(subject, sectionNumber, courseNumber);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null,
-                            "Please enter a valid course number.",
-                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                    Object[] options = {"OK"};
+                    JOptionPane.showOptionDialog(null, "Please enter a valid course number.",
+                            "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                            null, options, options[0]);
                 }
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "Course number cannot be empty.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(null, "Course number cannot be empty.",
+                        "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                        null, options, options[0]);
             }
         }
         updatePanelInWorkList();
@@ -618,15 +625,20 @@ public class CourseRegistrationGUI extends JFrame {
     // if the user doesn't have a given such in his course workList, remind user by popping an error.
     private void deleteSection(String subject, int sectionNumber, int courseNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else if (!userStudent.whetherContainSuchSectionInWorkList(subject, courseNumber, sectionNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "Your work list doesn't contain this section.", "Input Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else {
             userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
+            userStudent.removeAllSectionsFromWorkList(subject,courseNumber);
         }
     }
 
@@ -644,14 +656,17 @@ public class CourseRegistrationGUI extends JFrame {
                     int courseNumber = Integer.parseInt(courseNumberStr);
                     addSection(subject, courseNumber, sectionNumber);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null,
-                            "Please enter a valid course number.",
-                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                    Object[] options = {"OK"};
+                    JOptionPane.showOptionDialog(null, "Please enter a valid course number.",
+                            "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                            null, options, options[0]);
                 }
             } else {
-                JOptionPane.showMessageDialog(null,
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(null,
                         "Course number cannot be empty.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                        "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                        null, options, options[0]);
             }
         }
         updatePanelInWorkList();
@@ -670,14 +685,18 @@ public class CourseRegistrationGUI extends JFrame {
                     int courseNumber = Integer.parseInt(courseNumberStr);
                     checkSameCourseAdded(subject, courseNumber);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null,
+                    Object[] options = {"OK"};
+                    JOptionPane.showOptionDialog(null,
                             "Please enter a valid course number.",
-                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                            "Input Error",  JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                            null, options, options[0]);
                 }
             } else {
-                JOptionPane.showMessageDialog(null,
+                Object[] options = {"OK"};
+                JOptionPane.showOptionDialog(null,
                         "Course number cannot be empty.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                        "Input Error",  JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                        null, options, options[0]);
             }
         }
     }
@@ -686,9 +705,11 @@ public class CourseRegistrationGUI extends JFrame {
     // EFFECTS; update the panel only if the user add a course that has not existed in the course work list.
     private void checkSameCourseAdded(String subject, int courseNumber) {
         if (userStudent.addANewCourseToWorkListCheckSameCourse(subject, courseNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "You have added " + subject + courseNumber + " to the course work list",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else {
             userStudent.addACourseToWorkList(subject, courseNumber);
             updatePanelInWorkList();
@@ -699,14 +720,18 @@ public class CourseRegistrationGUI extends JFrame {
     // in the panel or the section this user wants to add has already been added to the panel
     private void addSection(String subject, int courseNumber, int sectionNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "Your work list doesn't contain " + subject + String.valueOf(courseNumber),
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else if (userStudent.addANewSectionToWorkListCheckSameSection(subject, courseNumber, sectionNumber)) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "You have already added the section: " + subject + courseNumber + "-"
                             + sectionNumber + " before!! ",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         } else {
             userStudent.addANewSectionToWorkList(subject, courseNumber, sectionNumber);
         }
@@ -924,9 +949,11 @@ public class CourseRegistrationGUI extends JFrame {
                     homepage(name, studentId);
 
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null,
+                    Object[] options = {"OK"};
+                    JOptionPane.showOptionDialog(null,
                             "Please enter a valid student ID (numbers only).",
-                            "Login Error", JOptionPane.ERROR_MESSAGE);
+                            "Login Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                            null, options, options[0]);
                 }
             }
         });
@@ -992,9 +1019,11 @@ public class CourseRegistrationGUI extends JFrame {
             jsonReader = new JsonReader(JSON_STORE);
             userStudent = jsonReader.read();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
+            Object[] options = {"OK"};
+            JOptionPane.showOptionDialog(null,
                     "Unable to load from file " + JSON_STORE,
-                    "Fail to load", JOptionPane.ERROR_MESSAGE);
+                    "Fail to load", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
         }
     }
 

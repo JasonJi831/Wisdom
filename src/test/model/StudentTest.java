@@ -368,21 +368,30 @@ public class StudentTest {
     }
 
     @Test
-    void testRemoveAllSections() {
-        testStudent.removeAllSections("CPSC",210);
+    void testRemoveAllSectionsFromRegList() {
+        testStudent.removeAllSectionsFromRegList("CPSC",210);
         assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC", 210));
         testStudent.registerCourse("CPSC", 210, 101);
         assertFalse(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",
                 210).isEmpty());
-        testStudent.removeAllSections("ECON",210);
-        testStudent.removeAllSections("CPSC",210);
+        testStudent.removeAllSectionsFromRegList("ECON",210);
+        testStudent.removeAllSectionsFromRegList("CPSC",210);
         assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("ECON",210));
         assertNull(testStudent.showAllSectionOfThisCourseInRegisteredList("CPSC",210));
     }
 
-
-
-
-
+    @Test
+    void testRemoveAllSectionsFromWorkList() {
+        testStudent.removeAllSectionsFromWorkList("CPSC",210);
+        assertNull(testStudent.showAllSectionOfThisCourseInWorkList("CPSC", 210));
+        testStudent.addACourseToWorkList("CPSC", 210);
+        testStudent.addANewSectionToWorkList("CPSC", 210, 101);
+        assertFalse(testStudent.showAllSectionOfThisCourseInWorkList("CPSC",
+                210).isEmpty());
+        testStudent.removeAllSectionsFromWorkList("ECON",210);
+        testStudent.removeAllSectionsFromWorkList("CPSC",210);
+        assertNull(testStudent.showAllSectionOfThisCourseInWorkList("ECON",210));
+        assertNull(testStudent.showAllSectionOfThisCourseInWorkList("CPSC",210));
+    }
 
 }

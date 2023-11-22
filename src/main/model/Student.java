@@ -270,6 +270,7 @@ public class Student implements Writable {
         return false;
     }
 
+
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS:  removes a specific course section from the course registered list based on the provided course name,
@@ -287,12 +288,29 @@ public class Student implements Writable {
 
     }
 
+    // REQUIRES: course number > 0, section > 0
+    // MODIFIES: this
+    // EFFECTS:  removes all sections from the course work list based on the provided course name,
+    // course number, and section, and then, remove this course from the course work List.
+    public void removeAllSectionsFromWorkList(String subjectName, int courseNumber) {
+        if (!this.workList.isEmpty()) {
+            Iterator<Course> iterator = this.workList.iterator();
+            while (iterator.hasNext()) {
+                Course c = iterator.next();
+                if (c.sameCourse(subjectName, courseNumber)) {
+                    c.getAllSections().clear();
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
 
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS:  removes all sections from the course registered list based on the provided course name,
     // course number, and section, and then, remove this course from the course registered List.
-    public void removeAllSections(String subjectName, int courseNumber) {
+    public void removeAllSectionsFromRegList(String subjectName, int courseNumber) {
         if (!this.registeredList.isEmpty()) {
             Iterator<Course> iterator = this.registeredList.iterator();
             while (iterator.hasNext()) {
