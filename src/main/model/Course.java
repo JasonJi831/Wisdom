@@ -55,7 +55,6 @@ public class Course implements Writable {
     // EFFECTS: add a given section number to the section list.
     public void addSection(int sectionNumber) {
         sectionList.add(sectionNumber);
-
     }
 
     // REQUIRES: course number > 0

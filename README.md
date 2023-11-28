@@ -74,6 +74,25 @@ which will trigger a prompt asking if you wish to save the current course work l
 Upon restart, you will be prompted with the option to load the previous state. Clicking "For sure!" will load the state 
 from the file.
 
+## Phase 4: Task 2
+### A representative sample of the events:
++ Mon Nov 27 21:14:37 PST 2023
++ Jason(666666) added the course: CPSC330 to his/her course workList!
++ Mon Nov 27 21:14:43 PST 2023
++ Jason(666666) added the section: 203 for the course CPSC330 to his/her course workList
++ Mon Nov 27 21:14:48 PST 2023
++ Jason(666666) added the section: 201 for the course CPSC330 to his/her course workList
++ Mon Nov 27 21:14:54 PST 2023
++ Jason(666666) removed the section: 203 of the course CPSC330 from his/her course workList!
++ Mon Nov 27 21:15:03 PST 2023
++ Jason(666666) registered the section: 201 for the course CPSC330!
++ Mon Nov 27 21:15:06 PST 2023
++ Jason(666666) dropped the course: CPSC330
++ Mon Nov 27 21:15:21 PST 2023
++ Jason(666666) dropped the course: CPSC110
+
+
+
 
 
 

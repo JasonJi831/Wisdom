@@ -1,3 +1,6 @@
+// Reference: Paul Carter, Sep 5, 2023, AlarmSystem, java,
+// https://github.students.cs.ubc.ca/CPSC210/AlarmSystem
+
 package model;
 
 import org.json.JSONArray;
@@ -62,10 +65,13 @@ public class Student implements Writable {
 
     // REQUIRES: course number > 0
     // MODIFIES: this
-    // EFFECTS: adds a course to the course work List
+    // EFFECTS: adds a course to the course work List. After that adding the event - "adding a course to the course
+    // workList" to the logEvent.
     public void addACourseToWorkList(String courseSubject, int courseNumber) {
         Course addedCcourse = new Course(courseSubject, courseNumber);
         workList.add(addedCcourse);
+        EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" + " added the course: "
+                + courseSubject + courseNumber +  " to his/her course workList!"));
 
     }
 
@@ -122,17 +128,22 @@ public class Student implements Writable {
             }
         }
         return false;
+
     }
 
     // REQUIRES: course number > 0, and section number > 0.
     // MODIFIES: this
     // EFFECTS: adds a course section to the course work list with corresponding course subject,
     // course number and section number and returns true. If either a given section number has been added to
-    // this course or there is no any course in the work list, returns false only.
+    // this course or there is no any course in the work list, returns false only. After that, adding the event -
+    // "adding a new section for a course in the workList" to the logEvent.
     public boolean addANewSectionToWorkList(String courseSubject, int courseNumber, int sectionNum) {
         for (Course c : workList) {
             if (c.sameCourse(courseSubject, courseNumber) && !c.getAllSections().contains(sectionNum)) {
                 c.addSection(sectionNum);
+                EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" + " added the section: "
+                        + sectionNum + " for the course " + courseSubject + courseNumber
+                        + " to his/her course workList"));
                 return true;
             }
         }
@@ -141,11 +152,13 @@ public class Student implements Writable {
 
     // MODIFIES: this
     // EFFECTS: adds a course to the registered course list with corresponding course subject, course number and
-    // section number.
+    // section number. After that, adding the event - "registering a course in the workList" to the logEvent.
     public void registerCourse(String courseSubject, int courseNumber, int sectionNumber) {
         Course addedCcourse = new Course(courseSubject, courseNumber);
         addedCcourse.addSection(sectionNumber);
         registeredList.add(addedCcourse);
+        EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" +  " registered the section: "
+                + sectionNumber + " for the course " + courseSubject + courseNumber + "!"));
     }
 
 
@@ -257,12 +270,16 @@ public class Student implements Writable {
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS: removes a specific course section from the course work list based on the provided course name,
-    // course number, and section. If the specified course section is not found, it returns false.
+    // course number, and section. If the specified course section is not found, it returns false. After that,
+    // adding the event - "deleting a course from the workList" to the logEvent.
     public Boolean deleteOneCourseSection(String subjectName, int courseNumber, int section) {
         if (this.workList.isEmpty() == false) {
             for (Course c : this.workList) {
                 if (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
                     c.removeSection(section);
+                    EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" + " removed the section: "
+                            + section + " of the course " + subjectName + courseNumber
+                            + " from his/her course workList!"));
                     return true;
                 }
             }
@@ -291,7 +308,9 @@ public class Student implements Writable {
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS:  removes all sections from the course work list based on the provided course name,
-    // course number, and section, and then, remove this course from the course work List.
+    // course number, and section, and then, remove this course from the course work List. After that, adding the event
+    // - "remove the last section of a course from the workList" to the logEvent.
+    //    public void registerCourse(String courseSubject, int courseNumber, int sectionNumber) {
     public void removeAllSectionsFromWorkList(String subjectName, int courseNumber) {
         if (!this.workList.isEmpty()) {
             Iterator<Course> iterator = this.workList.iterator();
@@ -300,6 +319,8 @@ public class Student implements Writable {
                 if (c.sameCourse(subjectName, courseNumber)) {
                     c.getAllSections().clear();
                     iterator.remove();
+                    EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" + " removed the "
+                            + "course: " + subjectName + courseNumber + " from his/her course workList!"));
                 }
             }
         }
@@ -309,7 +330,8 @@ public class Student implements Writable {
     // REQUIRES: course number > 0, section > 0
     // MODIFIES: this
     // EFFECTS:  removes all sections from the course registered list based on the provided course name,
-    // course number, and section, and then, remove this course from the course registered List.
+    // course number, and section, and then, remove this course from the course registered List. After that adding
+    // the event - "dropping a course from the course registered List to the logEvent.
     public void removeAllSectionsFromRegList(String subjectName, int courseNumber) {
         if (!this.registeredList.isEmpty()) {
             Iterator<Course> iterator = this.registeredList.iterator();
@@ -318,6 +340,8 @@ public class Student implements Writable {
                 if (c.sameCourse(subjectName, courseNumber)) {
                     c.getAllSections().clear();
                     iterator.remove();
+                    EventLog.getInstance().logEvent(new Event(name + "(" + id +  ")" + " dropped the course: "
+                            + subjectName + courseNumber));
                 }
             }
         }

@@ -1,8 +1,22 @@
-package ui;
+// Reference1: Paul Carter, Jun 28, 2021, B02-SpaceInvadersBase, java,
+// https://github.students.cs.ubc.ca/CPSC210/B02-SpaceInvadersBase/commit/a114795faa8022e803137f805057d5e13d0e3184
 
+// Reference2: fgrund, Oct 15, 2022, C3-LectureLabStarter, java,
+// https://github.students.cs.ubc.ca/CPSC210/C3-LectureLabStarter
+
+// Reference3: liuhongkai, Oct 1st, 2023, RestaurantOrdersManager, java
+// https://github.students.cs.ubc.ca/CPSC210/SpaceInvadersRefactored
+
+// Reference4: Paul Carter, Sep 5, 2023, AlarmSystem, java,
+// https://github.students.cs.ubc.ca/CPSC210/AlarmSystem
+
+package ui;
 
 import model.Course;
 import model.Student;
+import model.Event;
+import model.EventLog;
+
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -55,12 +69,13 @@ public class CourseRegistrationGUI extends JFrame {
     private JsonReader jsonReader;
     private Student userStudent;
 
+
     // EFFECTS: Show the login page of the course registration system
     public CourseRegistrationGUI() {
         super("Course Registration System");
         setSize(600, 300);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        addWindowListener();
+        addListenerForWindow();
         setupBackground();
         initializeInfoPanel();
         setResizable(true);
@@ -81,7 +96,7 @@ public class CourseRegistrationGUI extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: adds WindowListener with a specific implementation of windowClosing to this
-    private void addWindowListener() {
+    private void addListenerForWindow() {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -98,11 +113,25 @@ public class CourseRegistrationGUI extends JFrame {
                 if (result == JOptionPane.YES_OPTION) {
                     saveBothLists();
                     dispose();
+                    printEventsLogged();
                 } else if (result == JOptionPane.NO_OPTION) {
                     dispose();
+                    printEventsLogged();
                 }
             }
         });
+    }
+
+
+    // EFFECTS: print to the console all the events that have been logged since the application run.
+    // if you loaded a previous state of course registration system, the previous action events will not be
+    // shown.
+    private void printEventsLogged() {
+        for (Event next : EventLog.getInstance()) {
+            if (!next.getDescription().equals("Event log cleared.")) {
+                System.out.println(next.toString());
+            }
+        }
     }
 
     // MODIFIES: this
@@ -392,7 +421,7 @@ public class CourseRegistrationGUI extends JFrame {
         registrationFrame.setVisible(true);
     }
 
-    // EFFECTS: creates a register button with good looking style.
+    // EFFECTS: creates a register button with good-looking style.
     private static JButton getRegisterButton() {
         JButton registerButton = new JButton("Register");
         registerButton.setFont(new Font("Segoe UI", Font.BOLD, 18)); // Set a custom font
@@ -484,6 +513,7 @@ public class CourseRegistrationGUI extends JFrame {
                     "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, options[0]);
         }
+
         updatePanelInRegisteredList();
         registrationFrame.dispose();
 
@@ -502,7 +532,7 @@ public class CourseRegistrationGUI extends JFrame {
         } else if (userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(null,
-                    "You have already registered" + subject + courseNumber + " before!! ",
+                    "You have already registered " + subject + courseNumber + " before!! ",
                     "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, options[0]);
         } else if (!userStudent.showAllSectionOfThisCourseInWorkList(subject, courseNumber).contains(sectionNumber)) {
@@ -638,7 +668,9 @@ public class CourseRegistrationGUI extends JFrame {
                     null, options, options[0]);
         } else {
             userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
-            userStudent.removeAllSectionsFromWorkList(subject,courseNumber);
+            if (userStudent.showAllSectionOfThisCourseInWorkList(subject,courseNumber).isEmpty()) {
+                userStudent.removeAllSectionsFromWorkList(subject, courseNumber);
+            }
         }
     }
 
@@ -688,14 +720,14 @@ public class CourseRegistrationGUI extends JFrame {
                     Object[] options = {"OK"};
                     JOptionPane.showOptionDialog(null,
                             "Please enter a valid course number.",
-                            "Input Error",  JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                            "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                             null, options, options[0]);
                 }
             } else {
                 Object[] options = {"OK"};
                 JOptionPane.showOptionDialog(null,
                         "Course number cannot be empty.",
-                        "Input Error",  JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                        "Input Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                         null, options, options[0]);
             }
         }
@@ -945,6 +977,7 @@ public class CourseRegistrationGUI extends JFrame {
                 userStudent = new Student(name, studentId);
                 try {
                     remove(loginPanel);
+                    remove(loginPanel);
                     remove(loginButtonPanel);
                     homepage(name, studentId);
 
@@ -1012,12 +1045,13 @@ public class CourseRegistrationGUI extends JFrame {
 
 
     // MODIFIES: this
-    // EFFECTS: loads the course work list and registered list from the file
+    // EFFECTS: loads the course work list and registered list from the file. Clear all logEvents.
     private void loadBothList() {
         remove(backgroundPanel);
         try {
             jsonReader = new JsonReader(JSON_STORE);
             userStudent = jsonReader.read();
+            EventLog.getInstance().clear();
         } catch (IOException e) {
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(null,
