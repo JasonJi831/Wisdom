@@ -162,8 +162,8 @@ public class Student implements Writable {
     }
 
 
-    // EFFECTS: returns a list of all courses in the course work list, including their course subject and number, a
-    // s strings (ex: "CPSC210").
+    // EFFECTS: returns a list of all courses in the course work list, including their course subject and number, as
+    // strings (ex: "CPSC210").
     public List<String> showALlCourseInWorkList() {
         List<String> result = new ArrayList<>();
         for (Course c : workList) {
@@ -273,7 +273,7 @@ public class Student implements Writable {
     // course number, and section. If the specified course section is not found, it returns false. After that,
     // adding the event - "deleting a course from the workList" to the logEvent.
     public Boolean deleteOneCourseSection(String subjectName, int courseNumber, int section) {
-        if (this.workList.isEmpty() == false) {
+        if (!this.workList.isEmpty()) {
             for (Course c : this.workList) {
                 if (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
                     c.removeSection(section);
@@ -293,7 +293,7 @@ public class Student implements Writable {
     // EFFECTS:  removes a specific course section from the course registered list based on the provided course name,
     // course number, and section. If the specified course section is not found, it returns false.
     public Boolean dropOneCourseSection(String subjectName, int courseNumber, int section) {
-        if (this.registeredList.isEmpty() == false) {
+        if (!this.registeredList.isEmpty()) {
             for (Course c : this.registeredList) {
                 if (c.getSubject().equals(subjectName) && c.getCourseNumber() == courseNumber) {
                     c.removeSection(section);
@@ -331,7 +331,7 @@ public class Student implements Writable {
     // MODIFIES: this
     // EFFECTS:  removes all sections from the course registered list based on the provided course name,
     // course number, and section, and then, remove this course from the course registered List. After that adding
-    // the event - "dropping a course from the course registered List to the logEvent.
+    // the event - "dropping a course" from the course registered List to the logEvent.
     public void removeAllSectionsFromRegList(String subjectName, int courseNumber) {
         if (!this.registeredList.isEmpty()) {
             Iterator<Course> iterator = this.registeredList.iterator();

@@ -35,7 +35,7 @@ public class Coordinator {
     // EFFECTS: Remove a student from the course coordinator's student list based on their student ID and return true.
     // If there is no student with that ID, return false only.
     public boolean removeStudent(int id) {
-        if (this.students.isEmpty() == false) {
+        if (!this.students.isEmpty()) {
             for (Student s : students) {
                 if (s.getId() == id) {
                     this.students.remove(s);

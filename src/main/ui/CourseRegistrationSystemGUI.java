@@ -70,7 +70,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
     private Student userStudent;
 
 
-    // EFFECTS: Show the login page of the course registration system
+    /**
+     * EFFECTS: Constructs the CourseRegistrationSystemGUI, initializing the user interface.
+     */
     public CourseRegistrationSystemGUI() {
         super("Course Registration System");
         setSize(600, 300);
@@ -82,8 +84,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         setVisible(true);
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds an infoPanel with no data to this JFrame
+
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Initializes the information panel with no data.
+     */
     private void initializeInfoPanel() {
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(new Dimension(600, 300));
@@ -94,8 +100,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
 
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds WindowListener with a specific implementation of windowClosing to this
+
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Adds a window listener that prompts the user to save data on closing and handles the user's response.
+     */
     private void addListenerForWindow() {
         addWindowListener(new WindowAdapter() {
             @Override
@@ -123,9 +133,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: print to the console all the events that have been logged since the application run.
-    // if you loaded a previous state of course registration system, the previous action events will not be
-    // shown.
+    /**
+     * EFFECTS: Prints all logged events to the console, excluding the 'Event log cleared.' event.
+     */
     private void printEventsLogged() {
         for (Event next : EventLog.getInstance()) {
             if (!next.getDescription().equals("Event log cleared.")) {
@@ -134,8 +144,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: saves the course work list and registered list to the file.
+
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Saves the current state of the course work list and registered list to a file.
+     * Displays an error message if the save operation fails.
+     */
     private void saveBothLists() {
         try {
             jsonWriter = new JsonWriter(JSON_STORE);
@@ -149,8 +164,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: initials and set up all elements of the JFrame window
+    /**
+     * EFFECTS: Sets up the background panel and loads the image to be used as the background.
+     */
     private void setupBackground() {
         backgroundPanel = new JPanel();
         backgroundPanel.setBackground(Color.white);
@@ -161,7 +177,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         loadHistory();
     }
 
-    // EFFECTS: adds the background of panel
+    /**
+     * EFFECTS: adds the background of panel
+     */
     private void addBackGround() {
         try {
             BufferedImage originalBackground = ImageIO.read(new File("./images/UBC_image.png"));
@@ -177,7 +195,14 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // EFFECTS: a helper to help resize an BufferedImage, and returns the resized image.
+    /**
+     * EFFECTS: Resizes a BufferedImage to the specified width and height.
+     *
+     * @param image     The original image to resize.
+     * @param newWidth  The width of the resized image.
+     * @param newHeight The height of the resized image.
+     * @return A new BufferedImage that is a resized version of the original image.
+     */
     public static BufferedImage resize(BufferedImage image, int newWidth, int newHeight) {
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, image.getType());
         Graphics2D g = resizedImage.createGraphics();
@@ -186,8 +211,10 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return resizedImage;
     }
 
-    // MODIFIES: this
-    // EFFECTS: shows the login interface.
+    /**
+     * MODIFIES: this
+     * EFFECTS: Displays the login interface.
+     */
     private void login() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(createLoginPanel(), BorderLayout.CENTER);
@@ -197,7 +224,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         setVisible(true);
     }
 
-    // EFFECTS: prompts the user to the homepage, creates a bar to make it more elaborated.
+    /**
+     * EFFECTS: Sets up and displays the homepage with user information and navigational options.
+     *
+     * @param name The name of the student.
+     * @param id The student ID.
+     */
     private void homepage(String name, int id) {
         topBarPanel = new JPanel(new BorderLayout());
         topBarPanel.setBackground(new Color(0, 51, 102));
@@ -220,7 +252,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         menuBar();
     }
 
-    // EFFECTS: add three buttons that can prompt the user to add courses or add sections the course workList.
+    /**
+     * EFFECTS: Displays buttons for managing the course work list.
+     */
     private void buttonsForWorkList() {
         buttonPanel.removeAll();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -247,7 +281,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
 
     }
 
-    // EFFECTS: add two buttons that can prompt the user to add courses or add sections the reg workList.
+    /**
+     * EFFECTS: Displays buttons for managing the registered course list.
+     */
     private void buttonsForRegList() {
         buttonPanel.removeAll();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -268,7 +304,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
         addListenerToDropCoursesButton(dropCoursesButton);
     }
 
-    // EFFECTS: add a listener to the button "register courses"
+    /**
+     * EFFECTS: Adds an action listener to the "Register Courses" button.
+     *
+     * @param registerCoursesButton the button to which the listener will be added.
+     * EFFECTS: Attaches an action listener to the "Register Courses" button that initiates displaying the
+     *          registration panel.
+     */
     private void addListenerToRegisterCoursesButton(JButton registerCoursesButton) {
         registerCoursesButton.addActionListener(new ActionListener() {
             @Override
@@ -278,7 +320,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         });
     }
 
-    // EFFECTS: add a listener to the button "drop courses"
+    /**
+     * EFFECTS: Adds an action listener to the "Drop Courses" button.
+     *
+     * @param dropCoursesButton the button to which the listener will be added.
+     * EFFECTS: Attaches an action listener to the "Drop Courses" button that initiates the course dropping process.
+     */
     private void addListenerToDropCoursesButton(JButton dropCoursesButton) {
         dropCoursesButton.addActionListener(new ActionListener() {
             @Override
@@ -289,7 +336,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: add a listener to the button "add courses"
+    /**
+     * EFFECTS: Adds an action listener to the "Delete Courses" button.
+     *
+     * @param acButton the button to which the listener will be added.
+     * EFFECTS: Attaches an action listener to the "Delete Courses" button that initiates the course deletion process
+     *          from the work list.
+     */
     private void addListenerToDeleteCoursesButton(JButton acButton) {
         acButton.addActionListener(new ActionListener() {
             @Override
@@ -300,7 +353,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: add a listener to the button "add courses"
+    /**
+     * EFFECTS: Adds an action listener to the "Add Courses" button.
+     *
+     * @param acButton the button to which the listener will be added.
+     * EFFECTS: Attaches an action listener to the "Add Courses" button that initiates the course addition process
+     *          to the work list.
+     */
     private void addListenerToAddCoursesButton(JButton acButton) {
         acButton.addActionListener(new ActionListener() {
             @Override
@@ -310,7 +369,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
         });
     }
 
-    // EFFECTS: add a listener to the button "add sections"
+    /**
+     * EFFECTS: Adds an action listener to the "Add Sections" button.
+     *
+     * @param asButton the button to which the listener will be added.
+     * EFFECTS: Attaches an action listener to the "Add Sections" button that initiates the section addition process
+     *          to the work list.
+     */
     private void addListenerToAddSectionsButton(JButton asButton) {
         asButton.addActionListener(new ActionListener() {
             @Override
@@ -320,9 +385,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         });
     }
 
-    // MODIFIES: this
-    // EFFECTS: shows a panel that can let the user type in course subject and course number of a course
-    // the user wants to drop from the course registered List.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Shows a dialog panel with input fields for subject and course number of the course to be dropped from
+     *          the registered list.
+     */
     private void dropCoursesInRegListPanel() {
         JPanel dropACoursePanel = new JPanel();
         dropACoursePanel.setLayout(new GridLayout(2, 2));
@@ -341,24 +409,14 @@ public class CourseRegistrationSystemGUI extends JFrame {
         dropCoursesSaving(result);
     }
 
-
-    // Helper method to create styled buttons
-    private JButton createStyledButton(String text, Color bgColor, Color textColor) {
-        JButton button = new JButton(text);
-        button.setBackground(bgColor);
-        button.setForeground(textColor);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setOpaque(true);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return button;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: drop a course from the userStudent's course registered list,
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
-    // if the user doesn't have such a course in course registered list, remind user by popping a message.
+    /**
+     * Handles the process of dropping a course from the registered list based on user input.
+     *
+     * MODIFIES: this
+     * EFFECTS: Attempts to drop a course from the registered list based on user input. If the input is invalid
+     *          or the course is not in the registered list, displays an error message. Updates the registered list
+     *          panel upon successful course dropping.
+     */
     private void dropCoursesSaving(int result) {
         if (result == JOptionPane.OK_OPTION) {
             String subject = dropSubjectField.getText().trim();
@@ -382,8 +440,14 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: drop a course from the registered list panel, popping notification if user types a course
-    // which has not existed in the course registered list
+    /**
+     * Drops a course from the registered list.
+     *
+     * @param subject      the subject of the course to drop.
+     * @param courseNumber the number of the course to drop.
+     * EFFECTS: If the course is in the registered list, removes it and updates the list display.
+     *          If the course is not in the registered list, displays an error message.
+     */
     private void dropCourses(String subject, int courseNumber) {
         if (!userStudent.repetitiveCourseInRegisteredList(subject, courseNumber)) {
             JOptionPane.showMessageDialog(null,
@@ -394,8 +458,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: shows a window that can let the user type in the info of a course which user wants to register.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Registers courses in the registration list panel.
+     */
     private void registerCoursesInRegListPanel() {
         registrationFrame = new JFrame("Course Registration");
         registrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -421,7 +488,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         registrationFrame.setVisible(true);
     }
 
-    // EFFECTS: creates a register button with good-looking style.
+    /**
+     * Creates and styles the "Register" button.
+     *
+     * @return JButton the styled "Register" button.
+     * EFFECTS: Creates a "Register" button with a custom font, color scheme, and hover effects.
+     */
     private static JButton getRegisterButton() {
         JButton registerButton = new JButton("Register");
         registerButton.setFont(new Font("Segoe UI", Font.BOLD, 18)); // Set a custom font
@@ -444,7 +516,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return registerButton;
     }
 
-    // EFFECTS: creates an instruction for registering a course.
+    /**
+     * Adds instructional labels to the registration frame.
+     *
+     * EFFECTS: Adds two labels to the registration frame that provide instructions on how to register a course.
+     */
     private void addAnInstructionForRegister() {
         JLabel instructionLabel1 = new JLabel("To register a course from your course work list shown below, ");
         JLabel instructionLabel2 = new JLabel(" please type the course information into the following boxes.");
@@ -456,8 +532,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         registrationFrame.add(instructionLabel2);
     }
 
-    // EFFECTS: creates a panel to help user register a course, the user needs to type the subject, course number and
-    // section number.
+    /**
+     * Creates and configures a panel for course registration input fields.
+     *
+     * @return JPanel a panel with input fields for subject, course number, and section number.
+     * EFFECTS: Creates a panel with labeled text fields for entering course registration information.
+     */
     private JPanel registerCoursePanelHelper() {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 2));
@@ -476,7 +556,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return inputPanel;
     }
 
-    // EFFECTS; add a listener to the button "register"
+    /**
+     * Adds an action listener to the "Register" button that triggers course registration.
+     *
+     * @param registerButton the button to attach the listener to.
+     * EFFECTS: Attaches an action listener to the "Register" button that initiates the course registration process.
+     */
     private void addListenerToRegisterButton(JButton registerButton) {
         registerButton.addActionListener(new ActionListener() {
             @Override
@@ -486,10 +571,14 @@ public class CourseRegistrationSystemGUI extends JFrame {
         });
     }
 
-    // MODIFIES: this
-    // EFFECTS: add a section to the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
-    // if the user has been added such a course to course work list, remind user by popping a message
+    /**
+     * Handles the course registration process and provides user feedback.
+     *
+     * MODIFIES: this
+     * EFFECTS: Attempts to register a course and section based on user input. If successful, updates the registered
+     *          list panel and closes the registration frame. If the input is invalid, displays an error message
+     *          to the user.
+     */
     private void registerCoursesSaving() {
         String subject = subjectFieldReg.getText().trim();
         String courseNumberStr = courseNumberFieldReg.getText().trim();
@@ -519,9 +608,16 @@ public class CourseRegistrationSystemGUI extends JFrame {
 
     }
 
-    // EFFECTS: add a section to the registered list panel, popping notification if user types a course
-    // which has not existed in the course work list or the section this user wants to
-    // add has already been added to the panel.
+    /**
+     * Registers a course section if it exists in the work list and has not already been registered.
+     *
+     * @param subject       the subject of the course.
+     * @param courseNumber  the course number.
+     * @param sectionNumber the section number to register.
+     * EFFECTS: Registers a section for a course if the course is in the work list and the section is not already
+     *          registered.
+     *          If the course or section is not valid, displays an error message to the user.
+     */
     private void registerSections(String subject, int courseNumber, int sectionNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
             Object[] options = {"OK"};
@@ -547,9 +643,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: shows a panel that can let the user type in course subject, course number and section number of a course
-    // the user wants to delete from the course workList.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Deletes courses from the work list panel.
+     */
     private void deleteCoursesInWorkListPanel() {
         JPanel addACoursePanel = new JPanel();
         addACoursePanel.setLayout(new GridLayout(3, 2));
@@ -573,8 +671,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: shows a panel that can let the user type in the course subject and course number for adding a course.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Adds courses to the work list panel.
+     */
     private void addCoursesInWorkListPanel() {
         JPanel addACoursePanel = new JPanel();
         addACoursePanel.setLayout(new GridLayout(2, 2));
@@ -593,8 +694,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         addCoursesSaving(result);
     }
 
-    // MODIFIES: this
-    // EFFECTS: shows a panel that can let the user type in the course subject and course number.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Adds sections to the work list panel.
+     */
     private void addSectionsInWorkListPanel() {
         JPanel addACoursePanel = new JPanel();
         addACoursePanel.setLayout(new GridLayout(3, 2));
@@ -618,10 +722,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: delete a section from the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
-    // if the user doesn't have such a course in course work list, remind user by popping a message
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Adds sections to the work list panel.
+     */
     private void deleteSectionsSaving(int result) {
         if (result == JOptionPane.OK_OPTION) {
             String subject = deleteSubjectField.getText().trim();
@@ -647,12 +752,20 @@ public class CourseRegistrationSystemGUI extends JFrame {
         updatePanelInWorkList();
     }
 
-
-    // MODIFIES: this
-    // EFFECTS: delete a section from the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping an error,
-    // if the user doesn't have a such course to course work list, remind user by popping an error,
-    // if the user doesn't have a given such in his course workList, remind user by popping an error.
+    /**
+     * Deletes a section from the student's course work list.
+     * Notifies the user with an error message if the course or section does not exist in the work list.
+     *
+     * @param subject       the subject of the course
+     * @param sectionNumber the section number to be deleted
+     * @param courseNumber  the course number from which the section is to be deleted
+     * MODIFIES: this
+     * EFFECTS: If the course and section are valid and exist, deletes the section from the work list.
+     *          If the course does not exist, notifies the user.
+     *          If the section does not exist in the course, notifies the user.
+     *          If all sections from a course are deleted, removes the course from the work list.
+     *          Otherwise, throws a NumberFormatException if the course number is not valid.
+     */
     private void deleteSection(String subject, int sectionNumber, int courseNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
             Object[] options = {"OK"};
@@ -668,16 +781,23 @@ public class CourseRegistrationSystemGUI extends JFrame {
                     null, options, options[0]);
         } else {
             userStudent.deleteOneCourseSection(subject, courseNumber, sectionNumber);
-            if (userStudent.showAllSectionOfThisCourseInWorkList(subject,courseNumber).isEmpty()) {
+            if (userStudent.showAllSectionOfThisCourseInWorkList(subject, courseNumber).isEmpty()) {
                 userStudent.removeAllSectionsFromWorkList(subject, courseNumber);
             }
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: add a section to the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
-    // if the user has been added such a course to course work list, remind user by popping a message
+
+    /**
+     * Saves the addition of a section to the student's course work list based on user input.
+     * Notifies the user with an error message if the input is invalid or the section already exists.
+     *
+     * @param result the result of the user's confirmation to add a section
+     * MODIFIES: this
+     * EFFECTS: If the user confirms the action, adds the section to the work list.
+     *          Notifies the user if the course number is invalid or empty.
+     *          Updates the panel displaying the work list if a section is successfully added.
+     */
     private void addSectionsSaving(int result) {
         if (result == JOptionPane.OK_OPTION) {
             String subject = subjectFieldSection.getText().trim();
@@ -704,10 +824,13 @@ public class CourseRegistrationSystemGUI extends JFrame {
         updatePanelInWorkList();
     }
 
-    // MODIFIES: this
-    // EFFECTS: add a section to the userStudent's course workList
-    // if the user type a valid course number, otherwise, throws NumberFormatException by popping a message,
-    // if the user has been added such a course to course work list, remind user by popping a message
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Handles the saving process for adding courses to the work list.
+     *
+     * @param result The result from the confirm dialog.
+     */
     private void addCoursesSaving(int result) {
         if (result == JOptionPane.OK_OPTION) {
             String subject = subjectField.getText().trim();
@@ -733,8 +856,16 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS; update the panel only if the user add a course that has not existed in the course work list.
+    /**
+     * Checks if a course has already been added to the work list and updates the panel accordingly.
+     *
+     * @param subject      the subject code of the course to check.
+     * @param courseNumber the course number to check.
+     * MODIFIES: this
+     * EFFECTS: If the course specified by subject and courseNumber has not been added to the work list,
+     *          it is added and the work list panel is updated. If the course is already in the work list,
+     *          an error message is displayed to the user.
+     */
     private void checkSameCourseAdded(String subject, int courseNumber) {
         if (userStudent.addANewCourseToWorkListCheckSameCourse(subject, courseNumber)) {
             Object[] options = {"OK"};
@@ -748,8 +879,10 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // EFFECTS: add a section to the workList panel, popping notification if user types a course which has not existed
-    // in the panel or the section this user wants to add has already been added to the panel
+    /**
+     * EFFECTS: Add a section to the workList panel, popping notification if user types a course which has not existed
+     * in the panel or the section this user wants to add has already been added to the panel
+     */
     private void addSection(String subject, int courseNumber, int sectionNumber) {
         if (!userStudent.workListContainSameCourse(subject, courseNumber)) {
             Object[] options = {"OK"};
@@ -770,7 +903,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: update the panel that shows the course details of each course in course workList
+    /**
+     * EFFECTS: Updates the panel displaying the course work list.
+     */
     private void updatePanelInWorkList() {
         infoPanel.remove(scrollPane); // Remove the old scrollPane.
         List<Course> courseListInWorkList = userStudent.getWorkList();
@@ -783,8 +918,14 @@ public class CourseRegistrationSystemGUI extends JFrame {
         repaint();
     }
 
-    // MODIFIES: this
-    // EFFECTS: show the courses information on the panel with the blue header.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Displays the courses in the work list on the panel.
+     *
+     * @param infoPanel The panel where courses are displayed.
+     * @param courseData The course data to display on the panel.
+     */
     private void showCourseInWorkList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
         Font headerFont = new Font("Segoe UI", Font.BOLD, 18);
@@ -810,7 +951,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         infoPanel.repaint();
     }
 
-    // EFFECTS: returns String[][] orderListData according to the current state of myRestaurant
+    /**
+     * EFFECTS: Retrieves the data for the work list in a format suitable for display in a JTable.
+     *
+     * @param courseList The list of courses to display.
+     * @return A 2D array of strings representing the course data.
+     */
     private String[][] getWorkListData(List<Course> courseList) {
         String[][] courseData = new String[courseList.size()][4];
         for (int i = 0; i < courseList.size(); i++) {
@@ -826,8 +972,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return courseData;
     }
 
-
-    // EFFECTS: show the data on the panel
+    /**
+     * EFFECTS: Shows the data on the registered list panel.
+     *
+     * @param infoPanel The panel where courses are displayed.
+     * @param courseData The course data to display on the panel.
+     */
     private void showCourseInRegList(JPanel infoPanel, String[][] courseData) {
         remove(infoPanel);
         Font headerFont = new Font("Segoe UI", Font.BOLD, 18);
@@ -854,7 +1004,12 @@ public class CourseRegistrationSystemGUI extends JFrame {
 
     }
 
-    // EFFECTS: returns String[][] orderListData according to the current state of myRestaurant
+    /**
+     * EFFECTS: Retrieves the data for the registered list in a format suitable for display in a JTable.
+     *
+     * @param courseList The list of registered courses to display.
+     * @return A 2D array of strings representing the course data.
+     */
     private String[][] getRegListData(List<Course> courseList) {
         String[][] courseData = new String[courseList.size()][4];
         for (int i = 0; i < courseList.size(); i++) {
@@ -871,7 +1026,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: creates a menuBar called options
+    /**
+     * EFFECTS: Creates and configures the menu bar.
+     */
     private void menuBar() {
         JMenuBar menuBar = new JMenuBar();
         menu = new JMenu("Options");
@@ -896,7 +1053,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
-    // EFFECTS: creates the listener for the course workList "item"
+    /**
+     * EFFECTS: Adds a listener to the 'Course WorkList' menu item.
+     */
     private void courseWorkListListener() {
         JMenuItem courseWorkListItem = new JMenuItem("Course WorkList");
         courseWorkListItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -914,7 +1073,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         menu.add(courseWorkListItem);
     }
 
-    // EFFECTS: creates the listener for the course registered "item"
+    /**
+     * EFFECTS: Adds a listener to the 'Registered List' menu item.
+     */
     private void courseRegisteredListener() {
         JMenuItem registeredListItem = new JMenuItem("Registered List");
         registeredListItem.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -932,7 +1093,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         menu.add(registeredListItem);
     }
 
-    // EFFECTS: update the panel that shows the course details of each course in course registered list
+    /**
+     * EFFECTS: Updates the panel displaying the registered course list.
+     */
     private void updatePanelInRegisteredList() {
         infoPanel.remove(scrollPane);
         List<Course> courseListInRegList = userStudent.getRegistereddList();
@@ -946,7 +1109,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // EFFECTS: creates the login panel.
+    /**
+     * EFFECTS: Creates and returns the login panel.
+     *
+     * @return A JPanel that contains the login form.
+     */
     private JPanel createLoginPanel() {
         loginPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         loginPanel.add(new JLabel("Name"));
@@ -958,7 +1125,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return loginPanel;
     }
 
-    // EFFECTS: creates the button "Login" with its own listener.
+    /**
+     * EFFECTS: Creates and returns the login button panel.
+     *
+     * @return A JPanel that contains the login button.
+     */
     private JPanel createButtonPanel() {
         loginButtonPanel = new JPanel();
         JButton loginButton = new JButton("Login");
@@ -967,7 +1138,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         return loginButtonPanel;
     }
 
-    // EFFECTS: add a listener to login button
+    /**
+     * EFFECTS: Adds a listener to the login button that validates user input and opens the homepage.
+     *
+     * @param loginButton The login button to add a listener to.
+     */
     private void addLoginListener(JButton loginButton) {
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -992,7 +1167,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
         });
     }
 
-    // EFFECTS: prompts the user to choose whether they want to load the history data.
+    /**
+     * EFFECTS: Prompts the user to choose whether they want to load previous session data.
+     */
     private void loadHistory() {
         Font buttonFont = new Font("Arial", Font.BOLD, 16);
         JLabel statusLabel1 = new JLabel("Do you want to load the previous"
@@ -1017,7 +1194,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // EFFECTS: add a listener to the button "Yes"
+    /**
+     * EFFECTS: Adds a listener to the 'Yes' button to load session data.
+     *
+     * @param btnYes The 'Yes' button to add a listener to.
+     */
     private void addListenerToButtonYes(JButton btnYes) {
         btnYes.addActionListener(new ActionListener() {
             @Override
@@ -1031,7 +1212,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
 
     }
 
-    // EFFECTS: add a listener to the button "No"
+    /**
+     * EFFECTS: Adds a listener to the 'No' button to start a new session.
+     *
+     * @param btnNo The 'No' button to add a listener to.
+     */
     private void addListenerToButtonNo(JButton btnNo) {
 
         btnNo.addActionListener(new ActionListener() {
@@ -1044,8 +1229,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: loads the course work list and registered list from the file. Clear all logEvents.
+
+    /**
+     * MODIFIES: this
+     * EFFECTS: Loads the course work list and registered list from the file and clears the event log.
+     */
     private void loadBothList() {
         remove(backgroundPanel);
         try {
@@ -1061,7 +1249,11 @@ public class CourseRegistrationSystemGUI extends JFrame {
         }
     }
 
-    // EFFECTS: run the course registration GUI
+    /**
+     * EFFECTS: Runs the course registration GUI.
+     *
+     * @param args The command line arguments.
+     */
     public static void main(String[] args) {
         new CourseRegistrationSystemGUI();
     }
