@@ -1,4 +1,5 @@
 # My Personal Project
+# Course Registration System - "Wisdom Registrar"
 
 ## Phase 0:
 
@@ -61,8 +62,9 @@ in the bottom panel.
   button in the bottom panel.
 
 
-- You can locate my visual component, which is an image of the UBC badge, upon starting the GUI. 
-It is displayed at the center of the login panel background.
+- You can locate my visual component, which is an image of the UBC badge, upon starting the
+`CourseRegistrationSystemGUI`. 
+- It is displayed at the center of the login panel background.
 
 
 - You can save the state of my application by attempting to close the window, 
@@ -76,20 +78,32 @@ from the file.
 
 ## Phase 4: Task 2
 ### A representative sample of the events:
-+ Mon Nov 27 21:14:37 PST 2023
-+ Jason(666666) added the course: CPSC330 to his/her course workList!
-+ Mon Nov 27 21:14:43 PST 2023
-+ Jason(666666) added the section: 203 for the course CPSC330 to his/her course workList
-+ Mon Nov 27 21:14:48 PST 2023
-+ Jason(666666) added the section: 201 for the course CPSC330 to his/her course workList
-+ Mon Nov 27 21:14:54 PST 2023
-+ Jason(666666) removed the section: 203 of the course CPSC330 from his/her course workList!
-+ Mon Nov 27 21:15:03 PST 2023
-+ Jason(666666) registered the section: 201 for the course CPSC330!
-+ Mon Nov 27 21:15:06 PST 2023
-+ Jason(666666) dropped the course: CPSC330
-+ Mon Nov 27 21:15:21 PST 2023
-+ Jason(666666) dropped the course: CPSC110
+- Mon Nov 27 21:14:37 PST 2023
+- Jason(666666) added the course: CPSC330 to his/her course workList!
+Mon Nov 27 21:14:43 PST 2023
+- Jason(666666) added the section: 203 for the course CPSC330 to his/her course workList
+- Mon Nov 27 21:14:48 PST 2023
+- Jason(666666) added the section: 201 for the course CPSC330 to his/her course workList
+- Mon Nov 27 21:14:54 PST 2023
+- Jason(666666) removed the section: 203 of the course CPSC330 from his/her course workList!
+- Mon Nov 27 21:15:03 PST 2023
+- Jason(666666) registered the section: 201 for the course CPSC330!
+- Mon Nov 27 21:15:06 PST 2023
+- Jason(666666) dropped the course: CPSC330
+- Mon Nov 27 21:15:21 PST 2023
+- Jason(666666) dropped the course: CPSC110
+
+## Phase 4: Task 3
+### Refactoring I might use to improve my design:
+- According to the current UML class design diagram of my whole project, one area that could benefit from refactoring is 
+to increase the cohesion of the `CourseRegistrationSystemGUI` class. Currently, this class handles multiple 
+responsibilities for the whole course registration, including adding a course, adding a section, dropping a course, 
+event handling and persistence operations. As we learned from the Single Responsibility 
+Principle, I would refactor this class to separate these functions. To be specific, I would introduce a new class called
+"UserInteractions" to handle the operations for my user, and I can also create a new class for data persistence only.
+This would not only simplify the `CourseRegistrationSystemGUI` class but also improve the maintainability of 
+my whole project.
+
 
 
 

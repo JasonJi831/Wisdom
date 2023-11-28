@@ -18,15 +18,16 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.*;
 
-public class CourseRegistrationSystem {
+public class CourseRegistrationSystemConsole {
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     private Student userStudent;
     private Scanner input;
     private static final String JSON_STORE = "./data/student.json";
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
+
 
     // EFFECTS: runs the course registration system
-    public CourseRegistrationSystem() throws FileNotFoundException {
+    public CourseRegistrationSystemConsole() throws FileNotFoundException {
         input = new Scanner(System.in);
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
