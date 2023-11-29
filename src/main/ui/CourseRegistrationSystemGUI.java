@@ -36,6 +36,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
+/**
+ * EFFECTS: Course Registration System GUI
+ */
 public class CourseRegistrationSystemGUI extends JFrame {
     private JFrame registrationFrame;
     private JTextField nameField;

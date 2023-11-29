@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.*;
 
+// Course registration System Console Based
 public class CourseRegistrationSystemConsole {
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
