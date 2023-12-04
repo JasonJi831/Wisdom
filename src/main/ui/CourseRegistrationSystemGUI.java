@@ -1177,9 +1177,9 @@ public class CourseRegistrationSystemGUI extends JFrame {
      */
     private void loadHistory() {
         Font buttonFont = new Font("Arial", Font.BOLD, 16);
-        JLabel statusLabel1 = new JLabel("Do you want to load the previous"
+        JLabel statusLabel1 = new JLabel("Would you like to load the previous"
                 + " course workList ", SwingConstants.CENTER);
-        JLabel statusLabel2 = new JLabel("and the registered list from the file?", SwingConstants.CENTER);
+        JLabel statusLabel2 = new JLabel("and registration records from the file?", SwingConstants.CENTER);
         JButton btnYes = new JButton("For sure!");
         JButton btnNo = new JButton("Start a new one!");
         btnYes.setFont(buttonFont);
